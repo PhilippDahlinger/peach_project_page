@@ -355,9 +355,8 @@ table.data td.num { font-family: var(--mono); text-align: right; }
 /* ---------------------------------------------------------------- real world */
 .rw-grid { display: grid; grid-template-columns: 0.62fr 1.38fr; gap: 18px; align-items: start; }
 .flipbook { margin: 0; padding: 14px; }
-.flip-frames { position: relative; aspect-ratio: 730 / 930; border-radius: var(--radius-sm); overflow: hidden; background: #eee; }
-.flip-frames img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s; }
-.flip-frames img.active { opacity: 1; }
+.flip-frames { position: relative; aspect-ratio: 478 / 616; border-radius: var(--radius-sm); overflow: hidden; background: #eee; }
+.flip-frames video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .figure-flat { margin: 0; padding: 14px; }
 .figure-flat img { width: 100%; }
 .rw-side { display: grid; gap: 18px; }

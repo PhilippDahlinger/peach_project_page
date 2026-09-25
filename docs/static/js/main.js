@@ -492,19 +492,8 @@
   function initFlipbook() {
     const fb = $("#flipbook");
     if (!fb) return;
-    const imgs = [...fb.querySelectorAll("img")];
-    let i = 0, hover = false, vis = false;
-    fb.addEventListener("mouseenter", () => (hover = true));
-    fb.addEventListener("mouseleave", () => (hover = false));
-    whenVisible(fb, (v) => (vis = v));
-    (function step() {
-      if (!hover && vis) {
-        imgs[i].classList.remove("active");
-        i = (i + 1) % imgs.length;
-        imgs[i].classList.add("active");
-      }
-      setTimeout(step, i === imgs.length - 1 ? 1600 : 650);
-    })();
+    const v = fb.querySelector("video");
+    whenVisible(fb, (vis) => (vis ? v.play().catch(() => {}) : v.pause()), { threshold: 0.1 });
   }
 
   function initLatentTabs() {
