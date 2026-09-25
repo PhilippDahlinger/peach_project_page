@@ -2,7 +2,7 @@
 
 Source of the project page for **PEACH: Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators** (NeurIPS 2026, [arXiv:2605.20978](https://arxiv.org/abs/2605.20978)).
 
-The website is a static page in [`docs/`](docs/). It has no build step and no external JS dependencies (three.js is vendored).
+The website is a static page in [`docs/`](docs/). It has no build step and loads nothing from third-party servers: three.js and the fonts (Outfit, Inter, JetBrains Mono, SIL OFL) are self-hosted.
 
 ## Publishing with GitHub Pages
 
@@ -25,15 +25,22 @@ docs/
   static/js/main.js              video comparison player, charts (data inline), τ explainer, widgets
   static/js/scene-viewer.js      three.js viewer for the real-world 3D comparison
   static/js/vendor/              three.js r169 (MIT)
-  static/images/                 figures exported from the paper
+  static/images/                 figures exported from the paper, share card, icons
+  static/images/steps/           parts of Figure 1 used in the "How PEACH works" cards
+  static/fonts/                  self-hosted web fonts
+  static/videos/hero/            tightly cropped PEACH clips for the hero strip
   static/videos/sim/<scene>/     <method>_task{1,2}.mp4 + .jpg poster
   static/data/realworld/         3D viewer scenes (<name>.json + <name>.bin)
 tools/
   convert_sim_gifs.py            supplementary GIFs -> cropped, white-background MP4s
+  make_hero_clips.py             zoomed-in PEACH clips for the hero strip
   realworld_scene.py             3D viewer data: placeholder generator + ParaView/XDMF converter
 ```
 
 ## Common updates
+
+**Link previews.** `og:image`/`twitter:image` point to the absolute URL of `static/images/social_card.png`
+(social networks need absolute URLs). Update them if the page moves to another domain.
 
 **Camera-ready paper / new arXiv version.** Update the links in the hero section of `docs/index.html` and the BibTeX block.
 
