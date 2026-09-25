@@ -73,7 +73,7 @@ The placeholder banner disappears automatically once the scenes are no longer ma
 To regenerate the placeholder: `python tools/realworld_scene.py dummy`.
 
 **τ explainer.** `python tools/tau_patches.py` regenerates `docs/static/data/tau_patches.json`: for each of the
-121 slider steps (τ from 0.1 to 8, geometric spacing) it samples 14 patch centers with FPS from a fixed seed point,
+121 slider steps (τ from 0.3 to 3, geometric spacing) it samples 14 patch centers with FPS from a fixed seed point,
 assigns points to their nearest center, and matches patch colors between neighboring steps with a linear
 assignment on point overlaps so that as few points as possible change color.
 

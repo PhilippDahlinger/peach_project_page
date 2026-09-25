@@ -28,7 +28,7 @@ from scipy.optimize import linear_sum_assignment
 N_FRAMES = 7          # rows of the waterfall, frame 0 at the top
 N_PER_FRAME = 34
 N_CENTERS = 14        # = 2 per frame, which is what large tau converges to
-TAU_MIN, TAU_MAX, N_STEPS = 0.1, 8.0, 121
+TAU_MIN, TAU_MAX, N_STEPS = 0.3, 3.0, 121
 DIP = 0.14            # depth of the final deformation
 SEED = 11
 

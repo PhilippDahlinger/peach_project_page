@@ -29,7 +29,7 @@ function label(html, cls) {
 function hintFor(step, F) {
   const stat = ` <span class="muted">Patches currently span ${step.framesPerPatch.toFixed(1)} of ${F} frames on average.</span>`;
   if (step.singleFrame) return "<b>Large τ: one frame per patch.</b> The frames are so far apart along the time axis that every patch stays inside a single frame, one on the left and one on the right. Each frame is encoded on its own, and motion across frames is invisible to a single patch." + stat;
-  if (step.framesPerPatch > 3.5) return "<b>Small τ: time barely counts.</b> The frames are squeezed together along the time axis, so a patch collects points from many frames that are close in space." + stat;
+  if (step.framesPerPatch > 2.6) return "<b>Small τ: time barely counts.</b> The frames are squeezed together along the time axis, so a patch collects points from many frames that are close in space." + stat;
   return "<b>Intermediate τ: local in space and time.</b> Each patch covers a compact space-time neighborhood of a few frames, so a token sees how the surface moves locally, without point correspondences." + stat;
 }
 
