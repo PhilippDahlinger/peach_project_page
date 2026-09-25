@@ -490,53 +490,36 @@
   }
 
   // ------------------------------------------------------------------ tau explainer
-  function initTau() {
+  // Patches, centers and colors are precomputed by tools/tau_patches.py (FPS per slider step,
+  // colors matched between neighboring steps so that as few points as possible change color).
+  async function initTau() {
     const canvas = $("#tau-canvas");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     const slider = $("#tau-slider"), out = $("#tau-value"), hint = $("#tau-hint");
-    syncRangeFill(slider);
-    const TAU_MAX = 3, F = 7, P = 34;
-    // a straight 1D profile that is pushed down progressively (it never springs back)
-    const prof = (x, t) => -0.14 * t * Math.exp(-((x - 0.5) ** 2) / 0.03);
-    let seed = 11;
-    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    const pts = [];
-    for (let f = 0; f < F; f++) {
-      const t = f / (F - 1);
-      for (let k = 0; k < P; k++) { const x = 0.02 + 0.96 * rnd(); pts.push({ x, h: prof(x, t), t, f }); }
-    }
-    // Nine fixed patch centers (three time levels x three positions), so every patch keeps
-    // its color while tau changes. Neighboring patches get clearly different hues.
-    const LEVELS = [0.1, 0.5, 0.9];
-    const XS = [[0.12, 0.45, 0.8], [0.22, 0.55, 0.88], [0.12, 0.45, 0.8]];
-    const COLORS = [["#1f77b4", "#ff7f0e", "#2ca02c"], ["#e377c2", "#17becf", "#d62728"], ["#8c564b", "#bcbd22", "#9467bd"]];
-    const centers = [];
-    LEVELS.forEach((t, j) => XS[j].forEach((x, i) => centers.push({ x, t, h: prof(x, t), color: COLORS[j][i] })));
-
-    function assign(tau) {
-      return pts.map((p) => {
-        let best = 0, bd = Infinity;
-        centers.forEach((c, i) => {
-          const d = (p.x - c.x) ** 2 + (p.h - c.h) ** 2 + (tau * (p.t - c.t)) ** 2;
-          if (d < bd) { bd = d; best = i; }
-        });
-        return best;
-      });
-    }
+    let data;
+    try { data = await (await fetch("static/data/tau_patches.json")).json(); }
+    catch (e) { hint.textContent = "Could not load the patch data."; return; }
+    const { points, steps, palette, nFrames: F, dip } = data;
+    const prof = (x, t) => -dip * t * Math.exp(-((x - 0.5) ** 2) / 0.03);
+    const N = points.x.length;
+    const h = points.x.map((x, i) => prof(x, points.t[i]));
+    slider.max = steps.length - 1;
+    const fill = syncRangeFill(slider);
 
     function draw() {
-      const tau = (slider.value / 100) * TAU_MAX;
-      out.textContent = tau.toFixed(2);
+      const step = steps[+slider.value];
+      const tau = step.tau;
+      out.textContent = tau < 1 ? tau.toFixed(2) : tau.toFixed(1);
+      fill();
       const W = canvas.width, H = canvas.height, pad = 34;
       const S = W - 2 * pad;
-      // Distances use the true (x, h, tau*t) coordinates. For display only, the time axis is
-      // compressed so that large tau still fits the canvas.
+      // Patches were computed in the true (x, h, tau*t) coordinates. For display only, the
+      // time axis is compressed so that large tau still fits the canvas. Time runs downwards.
       const k = S * 0.8, Hc = (H + 30) / 2;
-      const spread = 0.62 * (1 - Math.exp(-tau / 0.9));
-      // time runs downwards, like the deformation, so the frames nest instead of crossing
-      const top = Hc - ((spread + 0.14) * k) / 2;
-      const Y = (h, t) => top + (spread * t - h) * k;
+      const spread = 0.64 * (1 - Math.exp(-tau / 1.2));
+      const top = Hc - ((spread + dip) * k) / 2;
+      const Y = (hh, t) => top + (spread * t - hh) * k;
       const X = (x) => pad + x * S;
       ctx.clearRect(0, 0, W, H);
       for (let f = 0; f < F; f++) {
@@ -545,30 +528,28 @@
         for (let i = 0; i <= 100; i++) { const xx = i / 100; const yy = Y(prof(xx, t), t); i ? ctx.lineTo(X(xx), yy) : ctx.moveTo(X(xx), yy); }
         ctx.strokeStyle = "rgba(120,100,90,0.22)"; ctx.lineWidth = 1; ctx.stroke();
       }
-      const a = assign(tau);
-      pts.forEach((p, i) => {
+      for (let i = 0; i < N; i++) {
         ctx.beginPath();
-        ctx.arc(X(p.x), Y(p.h, p.t), 4.3, 0, Math.PI * 2);
-        ctx.fillStyle = centers[a[i]].color;
+        ctx.arc(X(points.x[i]), Y(h[i], points.t[i]), 4.3, 0, Math.PI * 2);
+        ctx.fillStyle = palette[parseInt(step.colors[i], 36)];
         ctx.fill();
-      });
-      centers.forEach((c) => {
-        ctx.beginPath(); ctx.arc(X(c.x), Y(c.h, c.t), 8.5, 0, Math.PI * 2);
-        ctx.fillStyle = c.color; ctx.fill();
+      }
+      for (const c of step.centers) {
+        const cx = X(points.x[c]), cy = Y(h[c], points.t[c]);
+        ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+        ctx.fillStyle = palette[parseInt(step.colors[c], 36)]; ctx.fill();
         ctx.lineWidth = 2.5; ctx.strokeStyle = "#fff"; ctx.stroke();
-        ctx.beginPath(); ctx.arc(X(c.x), Y(c.h, c.t), 10, 0, Math.PI * 2);
+        ctx.beginPath(); ctx.arc(cx, cy, 8.5, 0, Math.PI * 2);
         ctx.lineWidth = 1.5; ctx.strokeStyle = "#1f2430"; ctx.stroke();
-      });
+      }
       ctx.fillStyle = "#7a8190"; ctx.font = "13px Inter, sans-serif";
-      ctx.fillText("◉ patch center", pad, 22);
+      ctx.fillText("◉ patch center (farthest point sampling)", pad, 22);
       ctx.fillText("frame 1 = straight profile (top)  →  frame " + F + " = deepest (bottom)", pad, 40);
 
-      const framesPer = centers.map((_, j) => new Set(pts.filter((p, i) => a[i] === j).map((p) => p.f)).size);
-      const avg = framesPer.reduce((u, v) => u + v, 0) / framesPer.length;
-      const stat = ` <span class="muted">Patches currently span ${avg.toFixed(1)} of ${F} frames on average.</span>`;
-      if (tau < 0.06) hint.innerHTML = "<b>τ ≈ 0: time is ignored.</b> All frames lie on top of each other, so a patch collects points from the whole sequence that are close in space." + stat;
-      else if (tau > 0.9) hint.innerHTML = "<b>Large τ: time dominates.</b> Patches turn into thin slices of a few consecutive frames across the whole profile. In the limit, each frame is encoded on its own and motion is hard to see." + stat;
-      else hint.innerHTML = "<b>Intermediate τ: local in space and time.</b> Each patch covers a compact space-time neighborhood, so a token sees how the surface moves locally, without point correspondences." + stat;
+      const stat = ` <span class="muted">Patches currently span ${step.framesPerPatch.toFixed(1)} of ${F} frames on average.</span>`;
+      if (step.singleFrame) hint.innerHTML = "<b>Large τ: one frame per patch.</b> The frames are so far apart in space-time that every patch stays inside a single frame, one on the left and one on the right. Each frame is encoded on its own, and motion across frames is invisible to a single patch." + stat;
+      else if (step.framesPerPatch > 3.5) hint.innerHTML = "<b>Small τ: time barely counts.</b> The frames lie almost on top of each other, so a patch collects points from many frames that are close in space." + stat;
+      else hint.innerHTML = "<b>Intermediate τ: local in space and time.</b> Each patch covers a compact space-time neighborhood of a few frames, so a token sees how the surface moves locally, without point correspondences." + stat;
     }
     slider.addEventListener("input", draw);
     draw();

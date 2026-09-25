@@ -196,11 +196,11 @@
         <h3>Why 4D space-time patches?</h3>
         <p>Material properties show in the <i>dynamics</i> of a scene, not in a single frame. PEACH normalizes time, scales it by a factor <span class="math">τ</span> and then treats the sequence as one point cloud. Patches are then local in space <i>and</i> time, so the encoder can pick up motion without knowing which point is which.</p>
         <p>Drag the slider. Each row is one frame of a 1D profile that is pushed down over time. Points are colored by the space-time patch they fall into.</p>
-        <p class="muted small">For clarity, the nine patch centers are fixed here. PEACH samples them with farthest point sampling.</p>
+        <p class="muted small">The 14 patch centers are sampled with farthest point sampling, as in PEACH. Colors follow the patches as you move the slider, so as few points as possible change color.</p>
         <label class="slider-label" for="tau-slider">
-          <span>time scale <span class="math">τ</span> = <output id="tau-value">1.00</output></span>
+          <span>time scale <span class="math">τ</span> = <output id="tau-value">0.89</output></span>
         </label>
-        <input type="range" id="tau-slider" min="0" max="100" value="14" aria-describedby="tau-hint">
+        <input type="range" id="tau-slider" min="0" max="120" value="60" step="1" aria-describedby="tau-hint">
         <p class="hint" id="tau-hint"></p>
       </div>
       <div class="explainer-canvas">
