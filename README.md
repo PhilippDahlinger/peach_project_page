@@ -96,6 +96,19 @@ ffmpeg -i peach_content/raw_videos/raw_robot_falling.mp4 -an -vf "trim=start=9.2
 re-encodes the supplementary GIFs of test task 2 with fixed, zoomed-in crops per scene (`CROPS` in the script).
 They are rendered on an exact chroma green, which is replaced by white.
 
+## NeurIPS poster (A0)
+
+`poster/` holds an A0 landscape poster (1189 × 841 mm) built from the same content and style as the page:
+`poster.html` (layout), `poster.css` (sizes in mm/pt), `poster.js` (vector charts from the page data),
+`assets/` (logos, QR codes, τ renders, video frames, high-resolution figures).
+
+```bash
+node tools/build_poster.js     # -> poster/PEACH_poster_NeurIPS2026_A0.pdf + poster/preview.png
+```
+
+The build prints the overflow of each column; all values must be ≤ 0 (nothing cut off).
+QR codes: `assets/qr_project.svg` (project page) and `assets/qr_arxiv.svg` (arXiv), made with the `qrcode` Python package.
+
 ## Credits
 
 Layout inspired by the [MaNGO project page](https://alrhub.github.io/mango/) and the

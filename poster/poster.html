@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PEACH poster (A0)</title>
+<link rel="stylesheet" href="poster.css">
+<script defer src="poster.js"></script>
+</head>
+<body>
+<div class="poster">
+
+  <!-- ================================================================ HEADER -->
+  <header class="head">
+    <div class="head-logo"><img src="assets/alr_logo.png" alt="Autonomous Learning Robots Lab"></div>
+    <div class="head-title">
+      <div class="wordrow">
+        <img class="peach-icon" src="../docs/static/images/favicon.svg" alt="">
+        <h1 class="wordmark"><svg viewBox="0 0 196 44" width="196mm" height="44mm" aria-label="PEACH">
+          <defs><linearGradient id="wm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb07c"/><stop offset=".4" stop-color="#f4845f"/><stop offset="1" stop-color="#d9534f"/></linearGradient></defs>
+          <text x="0" y="41.5" font-family="Outfit" font-weight="800" font-size="41.6" letter-spacing="1.7" fill="url(#wm)">PEACH</text>
+        </svg></h1>
+        <span class="venue">NeurIPS 2026</span>
+      </div>
+      <h2 class="title">Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators</h2>
+      <p class="authors">
+        Philipp Dahlinger<sup>1</sup> · Balázs Gyenes<sup>1</sup> · Niklas Freymuth<sup>1</sup> · Luca Geminiani<sup>2</sup> · Tobias Würth<sup>3</sup> ·
+        Johannes Mitsch<sup>3</sup> · Nadja Klein<sup>2</sup> · Luise Kärger<sup>3</sup> · Gerhard Neumann<sup>1</sup>
+      </p>
+      <p class="affil"><sup>1</sup>Autonomous Learning Robots · <sup>2</sup>Methods for Big Data · <sup>3</sup>Institute of Vehicle System Technology — Karlsruhe Institute of Technology (KIT)</p>
+    </div>
+    <div class="head-right">
+      <div class="qrs">
+        <figure class="qr"><img src="assets/qr_project.svg" alt="QR code: project page"><figcaption>Project page</figcaption></figure>
+        <figure class="qr"><img src="assets/qr_arxiv.svg" alt="QR code: arXiv paper"><figcaption>Paper (arXiv)</figcaption></figure>
+      </div>
+      <img class="kit" src="assets/kit_logo.png" alt="Karlsruhe Institute of Technology">
+    </div>
+  </header>
+
+  <main class="cols">
+
+    <!-- ============================================================== COLUMN 1 -->
+    <section class="col col-1">
+      <div class="block">
+        <h3 class="sec"><span>1</span>The problem</h3>
+        <ul class="bullets">
+          <li><b>Learned simulators</b> (graph network simulators) are fast and differentiable, but must be told the <b>material</b>: stiffness, damping, thickness …</li>
+          <li><b>In-context learning</b> (MaNGO) infers the material from a few example trajectories, but needs <b>mesh trajectories</b>, which real sensors do not provide.</li>
+          <li><b>Depth cameras</b> give point clouds, with <b>no correspondences</b> between frames.</li>
+        </ul>
+        <div class="question">Can a simulator adapt to a new material from a few <b>point cloud recordings</b>, without any optimization loop?</div>
+      </div>
+
+      <div class="block">
+        <h3 class="sec"><span>2</span>How PEACH works</h3>
+        <ol class="how">
+          <li><b>Observe</b> 1–8 point cloud sequences of the target process, e.g. with a depth camera.</li>
+          <li><b>Encode</b> each sequence as <b>one point cloud in 4D space-time</b>: FPS + kNN patches, a PointMAE tokenizer on Fourier features and one transformer layer.</li>
+          <li><b>Aggregate</b> the sequence codes with a learned softmax into one <b>latent material description</b> <span class="m">r</span>.</li>
+          <li><b>Simulate</b> the <b>whole trajectory in one forward pass</b> with the MaNGO graph network simulator, conditioned on <span class="m">r</span> and an initial mesh.</li>
+        </ol>
+        <p class="note">Trained end-to-end in simulation, with point cloud augmentation (noise, region dropout, outliers) for sim-to-real.</p>
+      </div>
+
+      <div class="block">
+        <h3 class="sec"><span>3</span>Space-time patches</h3>
+        <p class="lead">Time is normalized and scaled by <span class="m">τ</span>. Patches then group points that are close in space <i>and</i> time, so motion becomes visible without point correspondences.</p>
+        <div class="taus">
+          <figure><img src="assets/tau_0.png" alt=""><figcaption><b>τ = 0.3</b><br>time barely counts: patches mix several frames</figcaption></figure>
+          <figure><img src="assets/tau_60.png" alt=""><figcaption><b>τ ≈ 1</b><br>patches are local in space and time</figcaption></figure>
+          <figure><img src="assets/tau_120.png" alt=""><figcaption><b>τ = 3</b><br>one frame per patch: motion is invisible to a single patch</figcaption></figure>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3 class="sec"><span>4</span>Auxiliary losses (training only)</h3>
+        <ul class="bullets">
+          <li><b>Material regression:</b> a small MLP predicts the physical parameters from <span class="m">r</span>. It grounds the latent space and doubles as system identification.</li>
+          <li><b>Signed distance field:</b> query points predict their distance to the mesh surface from nearby patch tokens. This keeps geometric detail in the tokens and needs geometry only.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================== COLUMN 2 -->
+    <section class="col col-2">
+      <figure class="fig1">
+        <img src="assets/fig1.png" alt="Overview of PEACH">
+      </figure>
+
+      <div class="stats">
+        <div class="stat"><div class="num">1–8</div><div class="lbl">context point cloud sequences<br><small>plus one initial mesh</small></div></div>
+        <div class="stat"><div class="num">0</div><div class="lbl">real point clouds in training<br><small>zero-shot sim-to-real</small></div></div>
+        <div class="stat"><div class="num">45<span>%</span></div><div class="lbl">lower real-world error than the Oracle<br><small>at maximal sheet stretching</small></div></div>
+        <div class="stat"><div class="num">~140<span>×</span></div><div class="lbl">faster than test-time optimization<br><small>0.58 s vs. 82 s</small></div></div>
+      </div>
+
+      <div class="block">
+        <h3 class="sec"><span>5</span>Zero-shot sim-to-real</h3>
+        <p class="lead">A robot drops balls of different size and weight onto latex sheets of different thickness. Only stereo-camera point clouds are recorded; PEACH was trained purely in simulation.</p>
+        <div class="drop">
+          <figure><img src="assets/drop_0.jpg" alt=""><figcaption>release</figcaption></figure>
+          <figure><img src="assets/drop_8.jpg" alt=""><figcaption>contact</figcaption></figure>
+          <figure><img src="assets/drop_10.jpg" alt=""><figcaption>max. stretch</figcaption></figure>
+          <figure><img src="assets/drop_13.jpg" alt=""><figcaption>rebound</figcaption></figure>
+          <figure><img src="assets/drop_21.jpg" alt=""><figcaption>landing</figcaption></figure>
+        </div>
+        <div class="rw-row">
+          <figure class="rw-qual"><img src="assets/realworld_qualitative.png" alt="">
+            <figcaption>At maximal stretching (<i>t</i> = 0.2 s): the context-free simulator barely deforms, PEACH follows the observed point cloud (<span class="red">red</span>).</figcaption></figure>
+          <figure class="rw-chart"><div id="rw-chart"></div>
+            <figcaption>Mean point-to-mesh distance over all real trials. PEACH is best during the contact phase.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== COLUMN 3 -->
+    <section class="col col-3">
+      <div class="block">
+        <h3 class="sec"><span>6</span>Simulation results</h3>
+        <figure class="fig2"><img src="assets/fig2_scenes.png" alt="The four simulation scenes"></figure>
+        <div id="mse-legend" class="legend"></div>
+        <div id="mse-charts" class="mse"></div>
+        <p class="note">Full rollout MSE with 8 context trajectories (log scale, lower is better). PEACH beats all learned point cloud encoders and is on par with mesh-based MaNGO, which uses privileged mesh context.</p>
+        <div class="runtime">
+          <div id="runtime-chart"></div>
+          <p class="note"><b>No optimization loop:</b> adapting and simulating one task takes 0.58 s, vs. 82 s for test-time optimization and 240 s for one FEM rollout.</p>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3 class="sec"><span>7</span>Structured latent space</h3>
+        <p class="lead">Pairwise distances between tasks in the latent space <span class="m">r</span> follow their distances in physical parameters <span class="m">ρ</span>. Darker hexagons hold more task pairs.</p>
+        <div id="rsa" class="rsa"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>philippdahlinger.github.io/peach_project_page</span>
+    <span>arXiv:2605.20978</span>
+    <span>Contact: philipp.dahlinger@kit.edu</span>
+  </footer>
+</div>
+</body>
+</html>
