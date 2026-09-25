@@ -195,25 +195,28 @@
       <div class="explainer-text">
         <h3>Why 4D space-time patches?</h3>
         <p>Material properties show in the <i>dynamics</i> of a scene, not in a single frame. PEACH normalizes time, scales it by a factor <span class="math">τ</span> and then treats the sequence as one point cloud. Patches are then local in space <i>and</i> time, so the encoder can pick up motion without knowing which point is which.</p>
-        <p>Drag the slider. Each row is one frame of a deforming 1D profile, and points are colored by the space-time patch they fall into.</p>
+        <p>Drag the slider. Each row is one frame of a 1D profile that is pushed down over time. Points are colored by the space-time patch they fall into.</p>
+        <p class="muted small">For clarity, the nine patch centers are fixed here. PEACH samples them with farthest point sampling.</p>
         <label class="slider-label" for="tau-slider">
           <span>time scale <span class="math">τ</span> = <output id="tau-value">1.00</output></span>
         </label>
-        <input type="range" id="tau-slider" min="0" max="100" value="17" aria-describedby="tau-hint">
+        <input type="range" id="tau-slider" min="0" max="100" value="14" aria-describedby="tau-hint">
         <p class="hint" id="tau-hint"></p>
       </div>
       <div class="explainer-canvas">
         <canvas id="tau-canvas" width="640" height="420" aria-label="Space-time patches of a point cloud sequence for the chosen time scale"></canvas>
-        <div class="axis-note"><span>space →</span><span>time × τ ↑</span></div>
+        <div class="axis-note"><span>space →</span><span>time × τ ↓</span></div>
       </div>
     </div>
 
     <div class="grid-2 aux">
-      <div class="card">
+      <div class="card aux-card">
+        <div class="card-img"><img src="static/images/steps/aux_material.png" alt="MLP predicting material properties from the latent material description, trained with an MSE loss" loading="lazy"></div>
         <h3><span class="tag">Aux. loss 1</span> Material regression</h3>
         <p>A small MLP predicts the ground truth physical parameters <span class="math">ρ</span> from the latent description <span class="math">r</span>. This grounds the latent space in physically meaningful quantities and doubles as an explicit system identification.</p>
       </div>
-      <div class="card">
+      <div class="card aux-card">
+        <div class="card-img"><img src="static/images/steps/aux_sdf.png" alt="Model predicting the signed distance function from sequence embeddings and query points, trained with an MSE loss" loading="lazy"></div>
         <h3><span class="tag">Aux. loss 2</span> Signed distance field</h3>
         <p>Query points in space-time read the nearest patch tokens and predict a <span class="math">tanh</span>-squashed signed distance to the mesh surface. This keeps fine geometric detail in the tokenizer. SDF labels come from geometry alone, so this loss also works when physical properties are unknown.</p>
       </div>

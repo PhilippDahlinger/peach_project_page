@@ -195,10 +195,10 @@ p { margin: 0 0 0.9em; }
 /* ---------------------------------------------------------------- method */
 .steps { list-style: none; padding: 0; margin: 0 0 22px; display: grid; grid-template-columns: 1fr 1fr 0.8fr 1.5fr; gap: 14px; counter-reset: s; }
 .step-img {
-  height: 128px; margin: -22px -18px 14px; padding: 12px 14px; border-bottom: 1px solid var(--line);
-  display: grid; place-items: center; background: #fff; border-radius: var(--radius) var(--radius) 0 0;
+  height: 140px; margin: -22px -18px 14px; padding: 6px 8px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center; background: #fff; border-radius: var(--radius) var(--radius) 0 0;
 }
-.step-img img { max-height: 100%; max-width: 100%; object-fit: contain; }
+.step-img img { width: 100%; height: 100%; object-fit: contain; }
 .step {
   position: relative; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
   padding: 22px 18px 16px; box-shadow: var(--shadow);
@@ -216,12 +216,18 @@ p { margin: 0 0 0.9em; }
 
 .explainer { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 28px; align-items: center; margin-bottom: 18px; }
 .explainer-text p { color: var(--ink-2); font-size: 0.97rem; }
+.explainer-text p.muted { color: var(--ink-3); font-size: 0.86rem; }
 .explainer-canvas { position: relative; }
 .explainer-canvas canvas { width: 100%; height: auto; border-radius: var(--radius-sm); background: #fffaf6; border: 1px solid var(--line); }
 .axis-note { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--ink-3); margin-top: 6px; font-family: var(--mono); }
 .slider-label { display: block; font-weight: 600; margin: 10px 0 4px; }
 .slider-label output { font-family: var(--mono); color: var(--peach-deep); }
 .hint { min-height: 3em; font-size: 0.9rem; color: var(--ink); background: var(--bg-tint); border-left: 3px solid var(--peach); padding: 8px 12px; border-radius: 0 8px 8px 0; margin-top: 10px; }
+.card-img {
+  height: 140px; margin: -24px -24px 16px; padding: 8px 12px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center; background: #fff; border-radius: var(--radius) var(--radius) 0 0;
+}
+.card-img img { width: 100%; height: 100%; object-fit: contain; }
 .aux .card p { color: var(--ink-2); font-size: 0.95rem; margin: 0; }
 .tag { display: inline-block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; background: var(--peach-soft); color: var(--peach-deep); padding: 2px 8px; border-radius: 999px; margin-right: 6px; vertical-align: 2px; }
 .note { text-align: center; color: var(--ink-3); font-size: 0.9rem; margin-top: 18px; }
@@ -407,6 +413,7 @@ table.mini tr:last-child td, table.mini tr:last-child th { border-bottom: 0; }
   .container { padding: 0 16px; }
   .section { padding: 52px 0; }
   .card { padding: 16px; }
+  .card-img { margin: -16px -16px 14px; height: 110px; }
   .navlinks { gap: 14px; }
   .steps, .grid-2, .viewports, .spec-tables { grid-template-columns: 1fr; }
   .step::after { display: none; }

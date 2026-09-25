@@ -496,73 +496,79 @@
     const ctx = canvas.getContext("2d");
     const slider = $("#tau-slider"), out = $("#tau-value"), hint = $("#tau-hint");
     syncRangeFill(slider);
-    const TAU_MAX = 3, F = 9, P = 30, M = 27;
-    // deterministic pseudo-random
-    let seed = 7;
+    const TAU_MAX = 3, F = 7, P = 34;
+    // a straight 1D profile that is pushed down progressively (it never springs back)
+    const prof = (x, t) => -0.14 * t * Math.exp(-((x - 0.5) ** 2) / 0.03);
+    let seed = 11;
     const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    const prof = (x, t) => -0.13 * Math.sin(Math.PI * t) * Math.exp(-((x - 0.35 - 0.3 * t) ** 2) / 0.018);
     const pts = [];
     for (let f = 0; f < F; f++) {
       const t = f / (F - 1);
-      for (let k = 0; k < P; k++) { const xx = 0.03 + 0.94 * rnd(); pts.push({ x: xx, h: prof(xx, t), t, f }); }
+      for (let k = 0; k < P; k++) { const x = 0.02 + 0.96 * rnd(); pts.push({ x, h: prof(x, t), t, f }); }
     }
-    const COLORS = ["#e76f51", "#2a9d8f", "#e9c46a", "#264653", "#f4a261", "#8ab17d", "#b56576", "#6d597a", "#457b9d", "#d62828", "#90be6d", "#577590", "#f28482", "#43aa8b"];
+    // Nine fixed patch centers (three time levels x three positions), so every patch keeps
+    // its color while tau changes. Neighboring patches get clearly different hues.
+    const LEVELS = [0.1, 0.5, 0.9];
+    const XS = [[0.12, 0.45, 0.8], [0.22, 0.55, 0.88], [0.12, 0.45, 0.8]];
+    const COLORS = [["#1f77b4", "#ff7f0e", "#2ca02c"], ["#e377c2", "#17becf", "#d62728"], ["#8c564b", "#bcbd22", "#9467bd"]];
+    const centers = [];
+    LEVELS.forEach((t, j) => XS[j].forEach((x, i) => centers.push({ x, t, h: prof(x, t), color: COLORS[j][i] })));
 
-    function patches(tau) {
-      const co = pts.map((p) => [p.x, p.h, tau * p.t]);
-      const d2 = (a, b) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2;
-      const centers = [Math.floor(pts.length / 2)];
-      const md = co.map((c) => d2(c, co[centers[0]]));
-      while (centers.length < M) {
-        let bi = 0;
-        for (let i = 1; i < md.length; i++) if (md[i] > md[bi]) bi = i;
-        centers.push(bi);
-        co.forEach((c, i) => { md[i] = Math.min(md[i], d2(c, co[bi])); });
-      }
-      const assign = co.map((c) => { let best = 0, bd = Infinity; centers.forEach((ci, j) => { const dd = d2(c, co[ci]); if (dd < bd) { bd = dd; best = j; } }); return best; });
-      return { centers, assign };
+    function assign(tau) {
+      return pts.map((p) => {
+        let best = 0, bd = Infinity;
+        centers.forEach((c, i) => {
+          const d = (p.x - c.x) ** 2 + (p.h - c.h) ** 2 + (tau * (p.t - c.t)) ** 2;
+          if (d < bd) { bd = d; best = i; }
+        });
+        return best;
+      });
     }
 
     function draw() {
       const tau = (slider.value / 100) * TAU_MAX;
       out.textContent = tau.toFixed(2);
       const W = canvas.width, H = canvas.height, pad = 34;
-      const S = W - 2 * pad; // same pixel scale for all coordinates
-      // Patches are computed in true (x, h, tau*t) coordinates. For display only, the
-      // time axis is compressed so that large tau still fits the canvas.
+      const S = W - 2 * pad;
+      // Distances use the true (x, h, tau*t) coordinates. For display only, the time axis is
+      // compressed so that large tau still fits the canvas.
       const k = S * 0.8, Hc = (H + 30) / 2;
       const spread = 0.62 * (1 - Math.exp(-tau / 0.9));
-      const base = Hc + (spread * k) / 2 - 0.065 * k;
-      const Y = (h, t) => base - (h + spread * t) * k;
+      // time runs downwards, like the deformation, so the frames nest instead of crossing
+      const top = Hc - ((spread + 0.14) * k) / 2;
+      const Y = (h, t) => top + (spread * t - h) * k;
       const X = (x) => pad + x * S;
       ctx.clearRect(0, 0, W, H);
-      // faint true surface per frame
       for (let f = 0; f < F; f++) {
         const t = f / (F - 1);
         ctx.beginPath();
-        for (let i = 0; i <= 80; i++) { const xx = i / 80; const yy = Y(prof(xx, t), t); i ? ctx.lineTo(X(xx), yy) : ctx.moveTo(X(xx), yy); }
-        ctx.strokeStyle = "rgba(120,100,90,0.18)"; ctx.lineWidth = 1; ctx.stroke();
+        for (let i = 0; i <= 100; i++) { const xx = i / 100; const yy = Y(prof(xx, t), t); i ? ctx.lineTo(X(xx), yy) : ctx.moveTo(X(xx), yy); }
+        ctx.strokeStyle = "rgba(120,100,90,0.22)"; ctx.lineWidth = 1; ctx.stroke();
       }
-      const { centers, assign } = patches(tau);
+      const a = assign(tau);
       pts.forEach((p, i) => {
         ctx.beginPath();
-        ctx.arc(X(p.x), Y(p.h, p.t), 4.2, 0, Math.PI * 2);
-        ctx.fillStyle = COLORS[assign[i] % COLORS.length];
+        ctx.arc(X(p.x), Y(p.h, p.t), 4.3, 0, Math.PI * 2);
+        ctx.fillStyle = centers[a[i]].color;
         ctx.fill();
       });
-      centers.forEach((ci) => {
-        const p = pts[ci];
-        ctx.beginPath(); ctx.arc(X(p.x), Y(p.h, p.t), 7, 0, Math.PI * 2);
-        ctx.strokeStyle = "#1f2430"; ctx.lineWidth = 1.6; ctx.stroke();
+      centers.forEach((c) => {
+        ctx.beginPath(); ctx.arc(X(c.x), Y(c.h, c.t), 8.5, 0, Math.PI * 2);
+        ctx.fillStyle = c.color; ctx.fill();
+        ctx.lineWidth = 2.5; ctx.strokeStyle = "#fff"; ctx.stroke();
+        ctx.beginPath(); ctx.arc(X(c.x), Y(c.h, c.t), 10, 0, Math.PI * 2);
+        ctx.lineWidth = 1.5; ctx.strokeStyle = "#1f2430"; ctx.stroke();
       });
       ctx.fillStyle = "#7a8190"; ctx.font = "13px Inter, sans-serif";
-      ctx.fillText("○ patch center (farthest point sampling)", pad, 22);
-      const framesPer = centers.map((_, j) => new Set(pts.filter((p, i) => assign[i] === j).map((p) => p.f)).size);
-      const avg = framesPer.reduce((a, b) => a + b, 0) / framesPer.length;
+      ctx.fillText("◉ patch center", pad, 22);
+      ctx.fillText("frame 1 = straight profile (top)  →  frame " + F + " = deepest (bottom)", pad, 40);
+
+      const framesPer = centers.map((_, j) => new Set(pts.filter((p, i) => a[i] === j).map((p) => p.f)).size);
+      const avg = framesPer.reduce((u, v) => u + v, 0) / framesPer.length;
       const stat = ` <span class="muted">Patches currently span ${avg.toFixed(1)} of ${F} frames on average.</span>`;
-      if (tau < 0.08) hint.innerHTML = "<b>τ ≈ 0: time is ignored.</b> All frames collapse onto each other, and patches mix points from the whole sequence that are close in space." + stat;
-      else if (avg <= 1.05) hint.innerHTML = "<b>Large τ: frames are separated.</b> Every patch stays within a single frame, so each time step is encoded on its own and motion is hard to see." + stat;
-      else hint.innerHTML = "<b>Intermediate τ: local in space and time.</b> Patches span a few neighboring frames, so a token can see how the surface moves locally, without point correspondences." + stat;
+      if (tau < 0.06) hint.innerHTML = "<b>τ ≈ 0: time is ignored.</b> All frames lie on top of each other, so a patch collects points from the whole sequence that are close in space." + stat;
+      else if (tau > 0.9) hint.innerHTML = "<b>Large τ: time dominates.</b> Patches turn into thin slices of a few consecutive frames across the whole profile. In the limit, each frame is encoded on its own and motion is hard to see." + stat;
+      else hint.innerHTML = "<b>Intermediate τ: local in space and time.</b> Each patch covers a compact space-time neighborhood, so a token sees how the surface moves locally, without point correspondences." + stat;
     }
     slider.addEventListener("input", draw);
     draw();
