@@ -219,6 +219,28 @@ p { margin: 0 0 0.9em; }
 .explainer-text p.muted { color: var(--ink-3); font-size: 0.86rem; }
 .explainer-canvas { position: relative; }
 .explainer-canvas canvas { width: 100%; height: auto; border-radius: var(--radius-sm); background: #fffaf6; border: 1px solid var(--line); }
+.tau3d {
+  position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius-sm); overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, #f6efe9 100%); border: 1px solid var(--line); touch-action: none;
+}
+.tau3d canvas { display: block; }
+.tau3d-legend {
+  position: absolute; left: 10px; top: 10px; z-index: 3; font-size: 0.78rem; color: var(--ink-2);
+  background: rgb(255 255 255 / 0.85); padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line);
+  display: flex; align-items: center; gap: 6px; pointer-events: none;
+}
+.tau3d-legend .ring { width: 11px; height: 11px; border-radius: 50%; border: 2px solid #1f2430; background: #9aa0aa; }
+.tau3d-labels { position: absolute; inset: 0; pointer-events: none; }
+.axis-label {
+  font-family: var(--font); font-size: 12px; font-weight: 600; color: var(--ink); white-space: nowrap;
+  background: rgb(255 255 255 / 0.85); padding: 2px 7px; border-radius: 6px; border: 1px solid var(--line);
+}
+.axis-label .sub { font-weight: 400; color: var(--ink-3); }
+.axis-label.x { border-color: #e7a6a6; }
+.axis-label.y { border-color: #a6d4a6; }
+.axis-label.z { border-color: #a6bde7; }
+.tick-label { font-family: var(--mono); font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+.tau3d-controls { margin-top: 8px; }
 .axis-note { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--ink-3); margin-top: 6px; font-family: var(--mono); }
 .slider-label { display: block; font-weight: 600; margin: 10px 0 4px; }
 .slider-label output { font-family: var(--mono); color: var(--peach-deep); }

@@ -30,6 +30,7 @@
   </script>
   <script defer src="static/js/main.js"></script>
   <script type="module" src="static/js/scene-viewer.js"></script>
+  <script type="module" src="static/js/tau-viewer.js"></script>
 </head>
 <body>
 
@@ -195,7 +196,7 @@
       <div class="explainer-text">
         <h3>Why 4D space-time patches?</h3>
         <p>Material properties show in the <i>dynamics</i> of a scene, not in a single frame. PEACH normalizes time, scales it by a factor <span class="math">τ</span> and then treats the sequence as one point cloud. Patches are then local in space <i>and</i> time, so the encoder can pick up motion without knowing which point is which.</p>
-        <p>Drag the slider. Each row is one frame of a 1D profile that is pushed down over time. Points are colored by the space-time patch they fall into.</p>
+        <p>Drag the slider. Each line is one frame of a 1D profile that is pushed down over time. The three axes are the position along the profile, its deformation and the scaled time <span class="math">τ·t</span>. Points are colored by the space-time patch they fall into.</p>
         <p class="muted small">The 14 patch centers are sampled with farthest point sampling, as in PEACH. Colors follow the patches as you move the slider, so as few points as possible change color.</p>
         <label class="slider-label" for="tau-slider">
           <span>time scale <span class="math">τ</span> = <output id="tau-value">0.89</output></span>
@@ -204,9 +205,17 @@
         <p class="hint" id="tau-hint"></p>
       </div>
       <div class="explainer-canvas">
-        <canvas id="tau-canvas" width="640" height="420" aria-label="Space-time patches of a point cloud sequence for the chosen time scale"></canvas>
-        <div class="axis-note"><span>space →</span><span>time × τ ↓</span></div>
+        <div class="tau3d" id="tau-3d" aria-label="3D view of the space-time patches of a point cloud sequence for the chosen time scale">
+          <div class="tau3d-legend"><span class="ring"></span> patch center (farthest point sampling)</div>
+          <div class="vp-status">Loading…</div>
+        </div>
+        <div class="toggles tau3d-controls">
+          <span class="muted small">Drag to rotate, scroll to zoom, right-drag to pan.</span>
+          <label><input type="checkbox" id="tau-autofit" checked> Auto-fit view</label>
+          <button class="text-btn" id="tau-reset" type="button">Reset view</button>
+        </div>
       </div>
+    </div>
     </div>
 
     <div class="grid-2 aux">

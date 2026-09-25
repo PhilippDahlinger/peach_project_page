@@ -488,72 +488,6 @@
     onResize(host, draw);
   }
 
-  // ------------------------------------------------------------------ tau explainer
-  // Patches, centers and colors are precomputed by tools/tau_patches.py (FPS per slider step,
-  // colors matched between neighboring steps so that as few points as possible change color).
-  async function initTau() {
-    const canvas = $("#tau-canvas");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const slider = $("#tau-slider"), out = $("#tau-value"), hint = $("#tau-hint");
-    let data;
-    try { data = await (await fetch("static/data/tau_patches.json")).json(); }
-    catch (e) { hint.textContent = "Could not load the patch data."; return; }
-    const { points, steps, palette, nFrames: F, dip } = data;
-    const prof = (x, t) => -dip * t * Math.exp(-((x - 0.5) ** 2) / 0.03);
-    const N = points.x.length;
-    const h = points.x.map((x, i) => prof(x, points.t[i]));
-    slider.max = steps.length - 1;
-    const fill = syncRangeFill(slider);
-
-    function draw() {
-      const step = steps[+slider.value];
-      const tau = step.tau;
-      out.textContent = tau < 1 ? tau.toFixed(2) : tau.toFixed(1);
-      fill();
-      const W = canvas.width, H = canvas.height, pad = 34;
-      const S = W - 2 * pad;
-      // Patches were computed in the true (x, h, tau*t) coordinates. For display only, the
-      // time axis is compressed so that large tau still fits the canvas. Time runs downwards.
-      const k = S * 0.8, Hc = (H + 30) / 2;
-      const spread = 0.64 * (1 - Math.exp(-tau / 1.2));
-      const top = Hc - ((spread + dip) * k) / 2;
-      const Y = (hh, t) => top + (spread * t - hh) * k;
-      const X = (x) => pad + x * S;
-      ctx.clearRect(0, 0, W, H);
-      for (let f = 0; f < F; f++) {
-        const t = f / (F - 1);
-        ctx.beginPath();
-        for (let i = 0; i <= 100; i++) { const xx = i / 100; const yy = Y(prof(xx, t), t); i ? ctx.lineTo(X(xx), yy) : ctx.moveTo(X(xx), yy); }
-        ctx.strokeStyle = "rgba(120,100,90,0.22)"; ctx.lineWidth = 1; ctx.stroke();
-      }
-      for (let i = 0; i < N; i++) {
-        ctx.beginPath();
-        ctx.arc(X(points.x[i]), Y(h[i], points.t[i]), 4.3, 0, Math.PI * 2);
-        ctx.fillStyle = palette[parseInt(step.colors[i], 36)];
-        ctx.fill();
-      }
-      for (const c of step.centers) {
-        const cx = X(points.x[c]), cy = Y(h[c], points.t[c]);
-        ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI * 2);
-        ctx.fillStyle = palette[parseInt(step.colors[c], 36)]; ctx.fill();
-        ctx.lineWidth = 2.5; ctx.strokeStyle = "#fff"; ctx.stroke();
-        ctx.beginPath(); ctx.arc(cx, cy, 8.5, 0, Math.PI * 2);
-        ctx.lineWidth = 1.5; ctx.strokeStyle = "#1f2430"; ctx.stroke();
-      }
-      ctx.fillStyle = "#7a8190"; ctx.font = "13px Inter, sans-serif";
-      ctx.fillText("◉ patch center (farthest point sampling)", pad, 22);
-      ctx.fillText("frame 1 = straight profile (top)  →  frame " + F + " = deepest (bottom)", pad, 40);
-
-      const stat = ` <span class="muted">Patches currently span ${step.framesPerPatch.toFixed(1)} of ${F} frames on average.</span>`;
-      if (step.singleFrame) hint.innerHTML = "<b>Large τ: one frame per patch.</b> The frames are so far apart in space-time that every patch stays inside a single frame, one on the left and one on the right. Each frame is encoded on its own, and motion across frames is invisible to a single patch." + stat;
-      else if (step.framesPerPatch > 3.5) hint.innerHTML = "<b>Small τ: time barely counts.</b> The frames lie almost on top of each other, so a patch collects points from many frames that are close in space." + stat;
-      else hint.innerHTML = "<b>Intermediate τ: local in space and time.</b> Each patch covers a compact space-time neighborhood of a few frames, so a token sees how the surface moves locally, without point correspondences." + stat;
-    }
-    slider.addEventListener("input", draw);
-    draw();
-  }
-
   // ------------------------------------------------------------------ small widgets
   function initFlipbook() {
     const fb = $("#flipbook");
@@ -604,7 +538,6 @@
     initPlayer();
     initMseChart();
     initRwChart();
-    initTau();
     initFlipbook();
     initLatentTabs();
     initBibtex();

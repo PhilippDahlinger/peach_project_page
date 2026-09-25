@@ -22,9 +22,10 @@ npx http-server docs -p 8000     # or: cd docs && python3 -m http.server 8000
 docs/
   index.html                     page content
   static/css/style.css           styles
-  static/js/main.js              video comparison player, charts (data inline), τ explainer, widgets
+  static/js/main.js              video comparison player, charts (data inline), widgets
   static/js/scene-viewer.js      three.js viewer for the real-world 3D comparison
-  static/js/vendor/              three.js r169 (MIT)
+  static/js/tau-viewer.js        three.js view of the τ explainer (x, deformation, τ·t axes)
+  static/js/vendor/              three.js r169 + OrbitControls, CSS2DRenderer (MIT)
   static/images/                 figures exported from the paper, share card, icons
   static/images/steps/           parts of Figure 1 used in the "How PEACH works" cards
   static/fonts/                  self-hosted web fonts
