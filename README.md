@@ -39,6 +39,7 @@ tools/
   make_hero_clips.py             zoomed-in PEACH clips for the hero strip
   tau_patches.py                 FPS patches + color matching for the τ explainer (numpy, scipy)
   extract_rsa_hexbins.py         hexagons of figures/rsa_distances.pdf -> JSON (pymupdf, matplotlib)
+  crop_fig1.py                   Figure 1 -> overview image + step/aux-loss crops (pymupdf, pillow)
   realworld_scene.py             3D viewer data: placeholder generator + ParaView/XDMF converter
 ```
 
@@ -49,6 +50,9 @@ tools/
 
 **Camera-ready paper / new arXiv version.** Update the links in the hero section of `docs/index.html`. The BibTeX block
 already cites the NeurIPS 2026 paper; add `volume`/`pages` once the proceedings are out.
+
+**New version of Figure 1.** `python tools/crop_fig1.py <peach_fig1.pdf>` re-renders `fig1_overview.png` and all
+crops in `static/images/steps/` (currently from `figures/peach_fig1_v5.pdf`).
 
 **Code release.** Replace the disabled `<span class="btn btn-disabled">…Code…</span>` in `docs/index.html` with
 `<a class="btn" href="https://github.com/…">…Code</a>`.

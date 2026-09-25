@@ -221,7 +221,7 @@
         <p>A small MLP predicts the ground truth physical parameters <span class="math">ρ</span> from the latent description <span class="math">r</span>. This grounds the latent space in physically meaningful quantities and doubles as an explicit system identification.</p>
       </div>
       <div class="card aux-card">
-        <div class="card-img"><img src="static/images/steps/aux_sdf.png" alt="Model predicting the signed distance function from sequence embeddings and query points, trained with an MSE loss" loading="lazy"></div>
+        <div class="card-img"><img src="static/images/steps/aux_sdf.png" alt="Model predicting the signed distance field from sequence embeddings and query points, trained with an MSE loss" loading="lazy"></div>
         <h3><span class="tag">Aux. loss 2</span> Signed distance field</h3>
         <p>Query points in space-time read the nearest patch tokens and predict a <span class="math">tanh</span>-squashed signed distance to the mesh surface. This keeps fine geometric detail in the tokenizer. SDF labels come from geometry alone, so this loss also works when physical properties are unknown.</p>
       </div>
