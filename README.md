@@ -1,0 +1,71 @@
+# PEACH project page
+
+Source of the project page for **PEACH: Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators** (NeurIPS 2026, [arXiv:2605.20978](https://arxiv.org/abs/2605.20978)).
+
+The website is a static page in [`docs/`](docs/). It has no build step and no external JS dependencies (three.js is vendored).
+
+## Publishing with GitHub Pages
+
+1. Repository **Settings → Pages**.
+2. *Source*: **Deploy from a branch**, branch `main`, folder **`/docs`**.
+3. The page will be served at `https://philippdahlinger.github.io/peach_project_page/`.
+
+Local preview (any static server that supports HTTP range requests, needed for seeking in videos):
+
+```bash
+npx http-server docs -p 8000     # or: cd docs && python3 -m http.server 8000
+```
+
+## Layout
+
+```
+docs/
+  index.html                     page content
+  static/css/style.css           styles
+  static/js/main.js              video comparison player, charts (data inline), τ explainer, widgets
+  static/js/scene-viewer.js      three.js viewer for the real-world 3D comparison
+  static/js/vendor/              three.js r169 (MIT)
+  static/images/                 figures exported from the paper
+  static/videos/sim/<scene>/     <method>_task{1,2}.mp4 + .jpg poster
+  static/data/realworld/         3D viewer scenes (<name>.json + <name>.bin)
+tools/
+  convert_sim_gifs.py            supplementary GIFs -> cropped, white-background MP4s
+  realworld_scene.py             3D viewer data: placeholder generator + ParaView/XDMF converter
+```
+
+## Common updates
+
+**Camera-ready paper / new arXiv version.** Update the links in the hero section of `docs/index.html` and the BibTeX block.
+
+**Code release.** Replace the disabled `<span class="btn btn-disabled">…Code…</span>` in `docs/index.html` with
+`<a class="btn" href="https://github.com/…">…Code</a>`.
+
+**Real-world 3D data.** The viewer currently shows *placeholder* geometry. To show the real results, export
+the files written by `pc_mango/util/trampoline_real_world_eval/real_world_evaluator.py` (the ones the ParaView
+state loads) for one trial and one method each:
+
+```bash
+pip install numpy meshio h5py
+# which files does my ParaView state use?
+python tools/realworld_scene.py list-pvsm my_state.pvsm
+
+python tools/realworld_scene.py convert \
+    --mesh <vis_dir>/predicted_trajectory.xdmf --pc <vis_dir>/gth_pc.pvd \
+    --label "PEACH (ours)" --name peach --out docs/static/data/realworld
+python tools/realworld_scene.py convert \
+    --mesh <vis_dir_nocontext>/predicted_trajectory.xdmf --pc <vis_dir_nocontext>/gth_pc.pvd \
+    --label "No Context" --name nocontext --out docs/static/data/realworld
+```
+
+`--mesh` expects the merged sheet + ball mesh with the point data `displacement` (and optionally `object_id`),
+`--pc` a `.pvd` series of per-frame point clouds. `--fps 30` sets the time axis (use `--fps 0` to keep the file times).
+The placeholder banner disappears automatically once the scenes are no longer marked as placeholders.
+To regenerate the placeholder: `python tools/realworld_scene.py dummy`.
+
+**Simulation videos.** `python tools/convert_sim_gifs.py <videos_of_simulations> docs/static/videos/sim`
+re-encodes the supplementary GIFs. They are rendered on an exact chroma green, which is replaced by white.
+
+## Credits
+
+Layout inspired by the [MaNGO project page](https://alrhub.github.io/mango/) and the
+[Academic Project Page Template](https://github.com/eliahuhorwitz/Academic-project-page-template) (CC BY-SA 4.0).

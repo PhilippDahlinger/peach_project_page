@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PEACH — Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators</title>
+  <meta name="description" content="PEACH adapts a learned mesh-based physics simulator to unseen materials from a handful of observed point cloud sequences, with zero-shot sim-to-real transfer.">
+  <meta property="og:title" content="PEACH — Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators">
+  <meta property="og:description" content="In-context adaptation of graph network simulators from raw point cloud sequences. Zero-shot sim-to-real on a real trampoline scene.">
+  <meta property="og:image" content="static/images/fig1_overview.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="keywords" content="Graph Network Simulators, Point Clouds, In-Context Learning, Meta-Learning, Physical Simulation, Sim-to-Real, Deformable Objects">
+  <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/style.css">
+  <script type="importmap">
+    { "imports": { "three": "./static/js/vendor/three.module.min.js" } }
+  </script>
+  <script defer src="static/js/main.js"></script>
+  <script type="module" src="static/js/scene-viewer.js"></script>
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<nav class="topnav" aria-label="Sections">
+  <div class="topnav-inner">
+    <a class="brand" href="#top"><img src="static/images/favicon.svg" alt="" width="22" height="22"> PEACH</a>
+    <div class="navlinks">
+      <a href="#overview">Overview</a>
+      <a href="#method">Method</a>
+      <a href="#simulation">Simulation</a>
+      <a href="#real-world">Real World</a>
+      <a href="#latent">Latent Space</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<header class="hero" id="top">
+  <div class="container narrow center">
+    <p class="venue">NeurIPS 2026</p>
+    <h1 class="wordmark">PEACH</h1>
+    <p class="acronym"><b>P</b>oint Cloud <b>E</b>ncoding for <b>A</b>ccurate <b>C</b>ontext <b>H</b>andling</p>
+    <h2 class="paper-title">Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators</h2>
+
+    <p class="authors">
+      <span>Philipp Dahlinger<sup>1</sup></span>
+      <span>Balázs Gyenes<sup>1</sup></span>
+      <span>Niklas Freymuth<sup>1</sup></span>
+      <span>Luca Geminiani<sup>2</sup></span>
+      <span>Tobias Würth<sup>3</sup></span>
+      <span>Johannes Mitsch<sup>3</sup></span>
+      <span>Nadja Klein<sup>2</sup></span>
+      <span>Luise Kärger<sup>3</sup></span>
+      <span>Gerhard Neumann<sup>1</sup></span>
+    </p>
+    <p class="affiliations">
+      <span><sup>1</sup>Autonomous Learning Robots</span>
+      <span><sup>2</sup>Methods for Big Data</span>
+      <span><sup>3</sup>Institute of Vehicle System Technology</span>
+      <br>Karlsruhe Institute of Technology (KIT), Karlsruhe
+    </p>
+
+    <div class="links">
+      <a class="btn" href="https://arxiv.org/pdf/2605.20978" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 2.5L17.5 8H14zM8 13h8v1.6H8zm0 3.2h8v1.6H8zM8 9.8h4v1.6H8z" fill="currentColor"/></svg>
+        Paper
+      </a>
+      <a class="btn" href="https://arxiv.org/abs/2605.20978" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 3h3.2l4.3 6.1L16.3 3h3.2l-5.9 8.4L20 21h-3.3l-4.7-6.8L7.3 21H4l6.3-9.6z" fill="currentColor"/></svg>
+        arXiv
+      </a>
+      <span class="btn btn-disabled" aria-disabled="true" title="The code will be released soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z" fill="currentColor"/></svg>
+        Code <span class="soon">coming soon</span>
+      </span>
+      <a class="btn btn-ghost" href="#bibtex">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h4v4H9c0 1.7.6 2.6 2 3v2c-2.8-.4-4-2.2-4-5zm7 0h4v4h-2c0 1.7.6 2.6 2 3v2c-2.8-.4-4-2.2-4-5z" fill="currentColor"/></svg>
+        BibTeX
+      </a>
+    </div>
+  </div>
+
+  <!-- PEACH predictions on all four simulation scenes -->
+  <div class="container reel-wrap">
+    <div class="reel" aria-label="PEACH predictions on the four simulation scenes">
+      <figure><video src="static/videos/sim/deforming_block/peach_task1.mp4" poster="static/videos/sim/deforming_block/peach_task1.jpg" autoplay muted loop playsinline preload="metadata"></video><figcaption>Deforming Block</figcaption></figure>
+      <figure><video src="static/videos/sim/sheet_deformation/peach_task2.mp4" poster="static/videos/sim/sheet_deformation/peach_task2.jpg" autoplay muted loop playsinline preload="metadata"></video><figcaption>Sheet Deformation</figcaption></figure>
+      <figure class="wide"><video src="static/videos/sim/bending_beam/peach_task1.mp4" poster="static/videos/sim/bending_beam/peach_task1.jpg" autoplay muted loop playsinline preload="metadata"></video><figcaption>Bending Beam</figcaption></figure>
+      <figure><video src="static/videos/sim/trampoline/peach_task1.mp4" poster="static/videos/sim/trampoline/peach_task1.jpg" autoplay muted loop playsinline preload="metadata"></video><figcaption>Trampoline</figcaption></figure>
+    </div>
+    <p class="reel-caption">PEACH predictions (<span class="swatch-inline" style="--c:var(--m-peach)"></span>blue) with the ground truth mesh overlaid as a <span class="red">red</span> wireframe. Materials and initial conditions are not seen during training.</p>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================ TL;DR ============================ -->
+<section class="section" id="overview">
+  <div class="container">
+    <div class="tldr">
+      <p class="eyebrow">TL;DR</p>
+      <p class="tldr-text">A learned physics simulator usually needs to know the material it simulates. <b>PEACH</b> infers it instead from a few <b>point cloud recordings</b> of the process, as they come out of a depth camera. It needs no meshes, no parameter labels at test time and no optimization loop, and it transfers <b>zero-shot from simulation to a real robot scene</b>.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">~140<span>×</span></div>
+        <div class="stat-label">faster than test-time optimization<br><small>0.58&nbsp;s vs. 82&nbsp;s to adapt and simulate</small></div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">real point clouds seen during training<br><small>and still the lowest error on real data</small></div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3<span>/4</span></div>
+        <div class="stat-label">scenes more accurate than MaNGO<br><small>which uses privileged mesh context</small></div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1–8</div>
+        <div class="stat-label">context point cloud sequences<br><small>plus one initial mesh at inference</small></div>
+      </div>
+    </div>
+
+    <figure class="figure">
+      <img src="static/images/fig1_overview.png" alt="Overview of the PEACH framework: context encoding of point cloud sequences, mesh simulation, and auxiliary losses." loading="lazy">
+      <figcaption><b>Overview of PEACH.</b> Point cloud sequences from several simulated or real trajectories are encoded into a single latent material description by our spatio-temporal encoder. The aggregated latent vector conditions a mesh-based simulator, which predicts complete trajectories from an initial mesh. During training, auxiliary losses on the ground truth physical properties and a Signed Distance Field (SDF) improve accuracy. At inference, only the context point cloud sequences and an initial geometry are needed.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================ ABSTRACT ============================ -->
+<section class="section tinted">
+  <div class="container narrow">
+    <h2 class="section-title">Abstract</h2>
+    <p class="abstract">
+      Graph Network Simulators (GNSs) have emerged as powerful surrogates for complex physics-based simulation, offering inherent differentiability and orders-of-magnitude speedups over traditional solvers.
+      However, GNSs typically assume access to the underlying material parameters, such as stiffness or viscosity, severely limiting their utility in realistic experimental settings.
+      While recent meta-learning approaches address the parameter dependency by inferring properties from mesh trajectories, reconstructing a mesh from an observed scene is challenging.
+      In this work, we introduce Point Cloud Encoding for Accurate Context Handling (<i>PEACH</i>), a novel framework that applies in-context learning on point clouds to adapt a learned simulator to unseen physical properties during inference.
+      Our approach relies on a novel spatio-temporal point cloud sequence encoder, as well as two forms of auxiliary supervision to help improve simulation fidelity.
+      We demonstrate that <i>PEACH</i> is capable of accurate zero-shot sim-to-real transfer on a challenging, dynamic scene.
+      Experiments on simulation scenes show that <i>PEACH</i> even outperforms mesh-based baselines on prediction accuracy, while being much more practical for real-world deployment.
+    </p>
+  </div>
+</section>
+
+<!-- ============================ METHOD ============================ -->
+<section class="section" id="method">
+  <div class="container">
+    <h2 class="section-title">How PEACH works</h2>
+    <p class="lead">Every <i>task</i> is one fixed set of physical properties, such as stiffness, damping or thickness. PEACH turns a handful of point cloud recordings of that task into a latent material description, which then conditions a mesh simulator.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-num">1</span>
+        <h3>Observe</h3>
+        <p>Record 1–8 point cloud sequences of the process, e.g. with a depth camera. Points carry <b>no correspondences</b> across time, so the motion of individual points is never observed directly.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">2</span>
+        <h3>Encode in 4D space-time</h3>
+        <p>Each sequence becomes <b>one point cloud in 4D space-time</b>. Farthest point sampling and kNN form space-time patches, which a PointMAE tokenizer on Fourier features embeds. A single transformer layer and attention pooling produce one latent code per sequence.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">3</span>
+        <h3>Aggregate</h3>
+        <p>A learned element-wise softmax aggregation merges any number of sequence codes into a single <b>latent material description</b> <span class="math">r</span>. More context gives a better estimate.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">4</span>
+        <h3>Simulate</h3>
+        <p>The trajectory-level <b>MaNGO simulator</b> takes <span class="math">r</span> and an initial mesh (e.g. from CAD) and predicts the <b>entire trajectory in one forward pass</b>. It interleaves message passing in space with 1D convolutions over time.</p>
+      </li>
+    </ol>
+
+    <!-- interactive tau explainer -->
+    <div class="card explainer" id="tau-explainer">
+      <div class="explainer-text">
+        <h3>Why 4D space-time patches?</h3>
+        <p>Material properties show in the <i>dynamics</i> of a scene, not in a single frame. PEACH normalizes time, scales it by a factor <span class="math">τ</span> and then treats the sequence as one point cloud. Patches are then local in space <i>and</i> time, so the encoder can pick up motion without knowing which point is which.</p>
+        <p>Drag the slider. Each row is one frame of a deforming 1D profile, and points are colored by the space-time patch they fall into.</p>
+        <label class="slider-label" for="tau-slider">
+          <span>time scale <span class="math">τ</span> = <output id="tau-value">1.00</output></span>
+        </label>
+        <input type="range" id="tau-slider" min="0" max="100" value="17" aria-describedby="tau-hint">
+        <p class="hint" id="tau-hint"></p>
+      </div>
+      <div class="explainer-canvas">
+        <canvas id="tau-canvas" width="640" height="420" aria-label="Space-time patches of a point cloud sequence for the chosen time scale"></canvas>
+        <div class="axis-note"><span>space →</span><span>time × τ ↑</span></div>
+      </div>
+    </div>
+
+    <div class="grid-2 aux">
+      <div class="card">
+        <h3><span class="tag">Aux. loss 1</span> Material regression</h3>
+        <p>A small MLP predicts the ground truth physical parameters <span class="math">ρ</span> from the latent description <span class="math">r</span>. This grounds the latent space in physically meaningful quantities and doubles as an explicit system identification.</p>
+      </div>
+      <div class="card">
+        <h3><span class="tag">Aux. loss 2</span> Signed distance field</h3>
+        <p>Query points in space-time read the nearest patch tokens and predict a <span class="math">tanh</span>-squashed signed distance to the mesh surface. This keeps fine geometric detail in the tokenizer. SDF labels come from geometry alone, so this loss also works when physical properties are unknown.</p>
+      </div>
+    </div>
+    <p class="note">For sim-to-real transfer, the simulated training point clouds are augmented with multi-scale noise, structured region dropout and sporadic outlier points. No real-world data is used for training.</p>
+  </div>
+</section>
+
+<!-- ============================ SIMULATION ============================ -->
+<section class="section tinted" id="simulation">
+  <div class="container">
+    <h2 class="section-title">Simulation results</h2>
+    <p class="lead">We evaluate on four simulation scenes, covering 2D and 3D deformables and elastic to viscoelastic materials. Test tasks have physical properties and initial conditions that are not seen during training.</p>
+
+    <figure class="figure">
+      <img src="static/images/fig2_scenes.png" alt="The four simulation scenes: Deforming Block, Sheet Deformation, Bending Beam and Trampoline, with PEACH, PSTNet Encoder and No Context predictions on Trampoline." loading="lazy">
+      <figcaption><b>The four simulation scenes.</b> Qualitative predictions of PEACH and selected baselines are shown in <span class="c-peach">blue</span>, <span class="c-pstnet">pink</span> and <span class="c-nocontext">gray</span>, respectively, with ground truth meshes overlaid in <span class="red">red</span>.</figcaption>
+    </figure>
+
+    <!-- Comparison player -->
+    <div class="card player" id="sim-player">
+      <div class="player-head">
+        <h3>Compare methods side by side</h3>
+        <p class="muted">All videos run in sync. The <span class="red">red</span> wireframe is the ground truth mesh.</p>
+      </div>
+      <div class="controls-row">
+        <div class="seg" role="tablist" aria-label="Scene" id="scene-tabs"></div>
+        <div class="seg small" role="tablist" aria-label="Test task" id="task-tabs"></div>
+      </div>
+      <div class="chips" id="method-chips" aria-label="Methods to show"></div>
+      <div class="video-grid" id="video-grid"></div>
+      <div class="transport">
+        <button class="icon-btn" id="play-btn" aria-label="Pause">
+          <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zm6 0h4v14h-4z" fill="currentColor"/></svg>
+          <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        </button>
+        <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Playback position">
+        <span class="frame-label" id="frame-label">frame 0</span>
+        <div class="seg small" id="speed-tabs" aria-label="Playback speed"></div>
+      </div>
+    </div>
+
+    <!-- Quantitative -->
+    <div class="card chart-card" id="mse-chart">
+      <div class="player-head">
+        <h3>Simulation accuracy</h3>
+        <p class="muted">Full rollout MSE with 8 context trajectories (log scale, lower is better), mean over 4 seeds.</p>
+      </div>
+      <div class="controls-row">
+        <div class="seg" role="tablist" aria-label="Scene" id="mse-tabs"></div>
+        <button class="text-btn" id="mse-table-toggle" aria-expanded="false">Show table</button>
+      </div>
+      <p class="callout" id="mse-callout"></p>
+      <div id="mse-plot" class="plot"></div>
+      <div id="mse-table" class="table-wrap" hidden></div>
+    </div>
+
+    <div class="grid-2 findings">
+      <div class="finding">
+        <h4>Best point cloud encoder, by a wide margin</h4>
+        <p>PEACH beats the PSTNet and GNN point cloud encoders on every scene. These baselines differ from PEACH only in the encoder.</p>
+      </div>
+      <div class="finding">
+        <h4>Point clouds instead of privileged meshes</h4>
+        <p>PEACH is more accurate than mesh-context MaNGO on three of four scenes, although MaNGO sees ground truth mesh trajectories. On Bending Beam, PEACH even surpasses the Oracle, because it can learn an <i>effective</i> stiffness that compensates for simulator approximation errors.</p>
+      </div>
+      <div class="finding">
+        <h4>No optimization loop</h4>
+        <p>Test-time optimization via gradient descent through the simulator is strong on clean simulated data. It is ~140× slower, though (82&nbsp;s vs. 0.58&nbsp;s), and it degrades on noisy, occluded real-world observations.</p>
+      </div>
+      <div class="finding">
+        <h4>Generalizes out of distribution</h4>
+        <p>On Deforming Block tasks with Poisson's ratios outside the training range, PEACH stays close to Oracle performance. No Context is over an order of magnitude worse.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ REAL WORLD ============================ -->
+<section class="section" id="real-world">
+  <div class="container">
+    <h2 class="section-title">Zero-shot sim-to-real</h2>
+    <p class="lead">A robot drops balls of different size and weight onto latex sheets of different thickness, while a stereo camera records the scene. There are no meshes and no ground truth parameters, only point clouds. PEACH, trained purely in simulation, adapts from this context.</p>
+
+    <div class="rw-grid">
+      <figure class="flipbook card" id="flipbook">
+        <div class="flip-frames">
+          <img src="static/images/realworld_setup_01.jpg" alt="Real-world trampoline setup, frame 1" class="active">
+          <img src="static/images/realworld_setup_02.jpg" alt="Real-world trampoline setup, frame 2" loading="lazy">
+          <img src="static/images/realworld_setup_03.jpg" alt="Real-world trampoline setup, frame 3" loading="lazy">
+          <img src="static/images/realworld_setup_04.jpg" alt="Real-world trampoline setup, frame 4" loading="lazy">
+          <img src="static/images/realworld_setup_05.jpg" alt="Real-world trampoline setup, frame 5" loading="lazy">
+        </div>
+        <figcaption>A Franka Panda releases a ball above an elastic membrane stretched across a 3D-printed frame. ArUco markers on the corners calibrate the camera.</figcaption>
+      </figure>
+      <div class="rw-side">
+        <figure class="card figure-flat">
+          <img src="static/images/realworld_qualitative.png" alt="Qualitative real-world comparison at maximal sheet stretching between No Context and PEACH, with the observed point cloud in red." loading="lazy">
+          <figcaption>At maximal stretching (<i>t</i>&nbsp;=&nbsp;0.2&nbsp;s), the context-free simulator regresses to the mean and barely deforms. PEACH follows the observed point cloud (<span class="red">red</span>). The bottom of the sheet is occluded by the ball.</figcaption>
+        </figure>
+        <div class="spec-tables">
+          <table class="mini">
+            <caption>Balls</caption>
+            <thead><tr><th>Ø</th><th>Mass</th><th>Material</th></tr></thead>
+            <tbody>
+              <tr><td>40&nbsp;mm</td><td>269&nbsp;g</td><td>Steel, solid</td></tr>
+              <tr><td>40&nbsp;mm</td><td>69&nbsp;g</td><td>Steel, hollow</td></tr>
+              <tr><td>50&nbsp;mm</td><td>110&nbsp;g</td><td>Steel, hollow</td></tr>
+              <tr><td>60&nbsp;mm</td><td>162&nbsp;g</td><td>Steel, hollow</td></tr>
+              <tr><td>40&nbsp;mm</td><td>21&nbsp;g</td><td>PLA, 50% infill</td></tr>
+            </tbody>
+          </table>
+          <table class="mini">
+            <caption>Latex sheets</caption>
+            <thead><tr><th>Color</th><th>Thickness</th></tr></thead>
+            <tbody>
+              <tr><td><span class="dot" style="background:#222"></span>Black</td><td>0.381&nbsp;mm</td></tr>
+              <tr><td><span class="dot" style="background:#1f8a5b"></span>Green</td><td>0.254&nbsp;mm</td></tr>
+              <tr><td><span class="dot" style="background:#e8c547"></span>Yellow</td><td>0.152&nbsp;mm</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card chart-card" id="rw-chart">
+      <div class="player-head">
+        <h3>Error over time on real recordings</h3>
+        <p class="muted">Mean point-to-mesh distance between the predicted mesh and the observed point cloud, over all real-world trials, with the band from the paper. Click a legend entry to hide or show it.</p>
+      </div>
+      <div class="legend" id="rw-legend"></div>
+      <div id="rw-plot" class="plot"></div>
+      <p class="callout" id="rw-callout">At maximal stretching (<i>t</i>&nbsp;=&nbsp;0.2&nbsp;s), PEACH's error is <b>45% lower than the Oracle's</b> (measured and literature material parameters) and <b>59% lower than No Context's</b>. All methods predict the free fall well, but the baselines deteriorate once the ball hits the sheet.</p>
+    </div>
+
+    <!-- 3D viewer -->
+    <div class="card viewer-card" id="viewer3d">
+      <div class="player-head">
+        <h3>Explore in 3D: predicted mesh vs. observed point cloud</h3>
+        <p class="muted">Drag to orbit, scroll to zoom and right-drag to pan. Both views share one camera and one timeline.</p>
+      </div>
+      <div class="placeholder-banner" id="viewer-banner">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 1 21h22zm1 15h-2v-2h2zm0-4h-2V9h2z" fill="currentColor"/></svg>
+        <span><b>Preview with placeholder geometry.</b> The real recordings and PEACH predictions will replace this soon.</span>
+      </div>
+      <div class="viewports">
+        <div class="viewport" data-scene="static/data/realworld/peach.json">
+          <div class="vp-label"><span class="swatch" style="--c:var(--m-peach)"></span><span class="vp-name">PEACH (ours)</span></div>
+          <div class="vp-status">Loading…</div>
+        </div>
+        <div class="viewport" data-scene="static/data/realworld/nocontext.json">
+          <div class="vp-label"><span class="swatch" style="--c:var(--m-nocontext)"></span><span class="vp-name">No Context</span></div>
+          <div class="vp-status">Loading…</div>
+        </div>
+      </div>
+      <div class="transport">
+        <button class="icon-btn" id="v3d-play" aria-label="Play">
+          <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zm6 0h4v14h-4z" fill="currentColor"/></svg>
+          <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        </button>
+        <input type="range" id="v3d-scrub" min="0" max="19" value="6" step="1" aria-label="Time step">
+        <span class="frame-label" id="v3d-time">t = 0.000 s</span>
+      </div>
+      <div class="toggles">
+        <label><input type="checkbox" id="v3d-mesh" checked> Predicted mesh</label>
+        <label><input type="checkbox" id="v3d-wire"> Wireframe</label>
+        <label><input type="checkbox" id="v3d-points" checked> <span class="red">Observed point cloud</span></label>
+        <button class="text-btn" id="v3d-reset">Reset view</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ LATENT SPACE ============================ -->
+<section class="section tinted" id="latent">
+  <div class="container">
+    <h2 class="section-title">What does the latent space learn?</h2>
+    <div class="latent-grid">
+      <div class="card latent-fig">
+        <div class="seg small" role="tablist" aria-label="Dataset" id="latent-tabs">
+          <button role="tab" aria-selected="true" data-img="static/images/pca_peach_trampoline_bivariate.png" data-cap="Trampoline: color is the loading ratio (mass over Young's modulus × thickness), which governs how far the sheet deforms. Marker size is the relaxation time.">Trampoline</button>
+          <button role="tab" aria-selected="false" data-img="static/images/pca_peach_sd_young_modulus.png" data-cap="Sheet Deformation: tasks form an almost perfect one-dimensional manifold ordered by Young's modulus.">Sheet Deformation</button>
+          <button role="tab" aria-selected="false" data-img="static/images/pca_peach_db_poisson.png" data-cap="Deforming Block: tasks are ordered by Poisson's ratio along a smooth curve.">Deforming Block</button>
+        </div>
+        <img id="latent-img" src="static/images/pca_peach_trampoline_bivariate.png" alt="PCA projection of PEACH latent codes" loading="lazy">
+        <p class="muted small" id="latent-cap">Trampoline: color is the loading ratio (mass over Young's modulus × thickness), which governs how far the sheet deforms. Marker size is the relaxation time.</p>
+      </div>
+      <div class="latent-text">
+        <p>We project the latent material codes of all test tasks onto their first two principal components. The latent space has <b>no imposed structure</b>, yet physical properties emerge in it. On Trampoline, the first component separates tasks by relaxation time and the second by loading ratio.</p>
+        <p>Two statistical checks back this up:</p>
+        <ul class="checks">
+          <li><b>Distances mean something.</b> Pairwise task distances in latent space correlate with distances in physical parameter space. Spearman ρ is shown below, and all Mantel tests give <i>p</i>&nbsp;&lt;&nbsp;10<sup>−3</sup>.</li>
+          <li><b>More context, less uncertainty.</b> The variance of the latent code shrinks with context size at nearly the rate of averaging independent observations (β<sub>r</sub>&nbsp;≈&nbsp;1).</li>
+        </ul>
+        <div class="scroll-x"><table class="mini stats-table">
+          <thead><tr><th></th><th>Deforming Block</th><th>Sheet Deform.</th><th>Bending Beam</th><th>Trampoline</th></tr></thead>
+          <tbody>
+            <tr><th>Spearman ρ</th><td>0.97</td><td>0.96</td><td>0.64</td><td>0.60</td></tr>
+            <tr><th>β<sub>r</sub></th><td>1.03</td><td>1.08</td><td>0.96</td><td>0.73</td></tr>
+          </tbody>
+        </table></div>
+        <p class="muted small">Trampoline's lower β<sub>r</sub> is expected. Its trajectories differ only in the ball's drop position and height, so extra context is partly redundant.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ BIBTEX ============================ -->
+<section class="section" id="bibtex">
+  <div class="container narrow">
+    <h2 class="section-title">BibTeX</h2>
+    <div class="bibtex">
+      <button class="copy-btn" id="copy-bib" aria-label="Copy BibTeX">Copy</button>
+<pre><code id="bibtex-code">@article{dahlinger2026peach,
+  title   = {Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators},
+  author  = {Dahlinger, Philipp and Gyenes, Bal{\'a}zs and Freymuth, Niklas and Geminiani, Luca and W{\"u}rth, Tobias and Mitsch, Johannes and Klein, Nadja and K{\"a}rger, Luise and Neumann, Gerhard},
+  journal = {arXiv preprint arXiv:2605.20978},
+  year    = {2026}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container center">
+    <p>Autonomous Learning Robots · Karlsruhe Institute of Technology</p>
+    <p class="muted small">Page layout inspired by the <a href="https://alrhub.github.io/mango/">MaNGO project page</a> and the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener">Academic Project Page Template</a> (<a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>). 3D viewer built with <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+{
+ "format": "peach-scene",
+ "version": 1,
+ "label": "No Context",
+ "bin": "nocontext.bin",
+ "up": [
+  0,
+  0,
+  1
+ ],
+ "frameTimes": [
+  0.0,
+  0.03333,
+  0.06667,
+  0.1,
+  0.13333,
+  0.16667,
+  0.2,
+  0.23333,
+  0.26667,
+  0.3,
+  0.33333,
+  0.36667,
+  0.4,
+  0.43333,
+  0.46667,
+  0.5,
+  0.53333,
+  0.56667,
+  0.6,
+  0.63333
+ ],
+ "bounds": [
+  [
+   0.0,
+   0.0,
+   -0.03822999820113182
+  ],
+  [
+   0.25999999046325684,
+   0.25999999046325684,
+   0.13147999346256256
+  ]
+ ],
+ "mesh": {
+  "numVertices": 1843,
+  "numTriangles": 3520
+ },
+ "points": {
+  "frameOffsets": [
+   0,
+   1138,
+   2282,
+   3424,
+   4556,
+   5697,
+   6841,
+   7988,
+   9128,
+   10263,
+   11404,
+   12540,
+   13669,
+   14816,
+   15944,
+   17080,
+   18224,
+   19359,
+   20508,
+   21650,
+   22784
+  ]
+ },
+ "buffers": {
+  "meshPositions": {
+   "offset": 0,
+   "length": 110580,
+   "dtype": "float32"
+  },
+  "pointPositions": {
+   "offset": 442320,
+   "length": 68352,
+   "dtype": "float32"
+  },
+  "meshIndex": {
+   "offset": 715728,
+   "length": 10560,
+   "dtype": "uint32"
+  },
+  "meshObjectId": {
+   "offset": 757968,
+   "length": 1843,
+   "dtype": "uint8"
+  },
+  "pointObjectId": {
+   "offset": 759812,
+   "length": 22784,
+   "dtype": "uint8"
+  }
+ },
+ "meta": {
+  "placeholder": true
+ }
+}
