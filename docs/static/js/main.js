@@ -336,9 +336,6 @@
         gridG.append(t);
       }
       s.append(gridG);
-      const at = svg("text", { x: W - right, y: 12, "text-anchor": "end", class: "axis-title" });
-      at.textContent = W < 560 ? "MSE (log) → lower is better" : "Full rollout MSE (log scale) → lower is better";
-      s.append(at);
 
       const peach = data.peach[0];
       for (const r of rows) {
@@ -353,7 +350,7 @@
         const cy = r.y + rowH / 2 - 2;
         g.append(svg("rect", { class: "hit", x: 0, y: r.y - 2, width: W, height: rowH, rx: 6 }));
         const lab = svg("text", { x: W < 560 ? 4 : 12, y: cy + 4.5, class: "row-label", "font-weight": r.m === "peach" ? 700 : 400 });
-        lab.textContent = METHODS[r.m].name + (r.m === "mango" ? " †" : "");
+        lab.textContent = METHODS[r.m].name;
         g.append(lab);
         const bx0 = x(10 ** e0), bx1 = x(mean), bh = 16;
         g.append(svg("path", { class: "bar", fill: METHODS[r.m].color, d: roundedRight(bx0, cy - bh / 2, Math.max(bx1 - bx0, 2), bh, 4) }));
@@ -379,18 +376,8 @@
       }
       host.querySelector("svg")?.remove();
       host.prepend(s);
-      $("#mse-callout").innerHTML = callout(scene) + ` <span class="muted small">† uses privileged ground truth mesh context.</span>`;
     }
 
-    function callout(sc) {
-      const d = MSE[sc];
-      const best = ["pstnet", "gnn"].sort((a, b) => d[a][0] - d[b][0])[0];
-      let t = `PEACH: <b>${(d[best][0] / d.peach[0]).toFixed(1)}× lower MSE</b> than the best other learned point cloud encoder (${METHODS[best].name})`;
-      t += d.peach[0] < d.mango[0] ? `, and ${(d.mango[0] / d.peach[0]).toFixed(1)}× lower than mesh-based MaNGO.` : `, and within ${(d.peach[0] / d.mango[0]).toFixed(1)}× of mesh-based MaNGO.`;
-      if (sc === "bending_beam") t += " Here PEACH even beats the Oracle. Test-time optimization is best, at ~140× the inference time.";
-      if (sc === "sheet_deformation") t += " Test-time optimization matches the Oracle here, at ~140× the inference time.";
-      return t;
-    }
     draw();
     onResize(host, draw);
   }
@@ -488,6 +475,68 @@
     onResize(host, draw);
   }
 
+  // ------------------------------------------------------------------ latent vs. physical distances (hexbins)
+  // Hexagons extracted from the paper's vector figure by tools/extract_rsa_hexbins.py.
+  async function initRsa() {
+    const grid = $("#rsa-grid");
+    if (!grid) return;
+    let data;
+    try { data = await (await fetch("static/data/rsa_hexbins.json")).json(); }
+    catch (e) { grid.textContent = "Could not load the plot data."; return; }
+    // single-hue sequential ramp (light -> dark blue), density is relative per panel
+    const STOPS = [[0, [234, 242, 250]], [0.35, [158, 197, 229]], [0.65, [59, 135, 196]], [1, [11, 53, 99]]];
+    const ramp = (t) => {
+      let k = 1;
+      while (k < STOPS.length - 1 && t > STOPS[k][0]) k++;
+      const [t0, c0] = STOPS[k - 1], [t1, c1] = STOPS[k];
+      const u = Math.min(1, Math.max(0, (t - t0) / (t1 - t0)));
+      return `rgb(${c0.map((c, i) => Math.round(c + (c1[i] - c) * u)).join(",")})`;
+    };
+    const W = 240, H = 196, L = 34, R = 8, T = 8, B = 36, XMAX = 3.35, YMAX = 2.4;
+    const sx = (W - L - R) / XMAX, sy = (H - T - B) / YMAX;
+    const X = (v) => L + v * sx, Y = (v) => H - B - v * sy;
+    data.panels.forEach((cells, k) => {
+      const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `${data.names[k]}: distance in latent space against distance in physical parameters` });
+      const clipId = `rsa-clip-${k}`;
+      const defs = svg("defs");
+      const cp = svg("clipPath", { id: clipId });
+      cp.append(svg("rect", { x: L, y: T, width: W - L - R, height: H - T - B }));
+      defs.append(cp);
+      s.append(defs);
+      const g = svg("g", { class: "grid" });
+      for (let v = 0; v <= 3; v++) {
+        g.append(svg("line", { x1: X(v), x2: X(v), y1: T, y2: H - B }));
+        const t = svg("text", { x: X(v), y: H - B + 14, "text-anchor": "middle", class: "tick-label" });
+        t.textContent = v;
+        g.append(t);
+      }
+      for (let v = 0; v <= 2; v++) {
+        g.append(svg("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v) }));
+        const t = svg("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end", class: "tick-label" });
+        t.textContent = v;
+        g.append(t);
+      }
+      s.append(g);
+      const hexes = svg("g", { "clip-path": `url(#${clipId})` });
+      const sorted = [...cells].sort((a, b) => a[2] - b[2]);
+      for (const [cx, cy, t] of sorted) {
+        const pts = data.hexagon.map(([dx, dy]) => `${(X(cx + dx)).toFixed(1)},${(Y(cy + dy)).toFixed(1)}`).join(" ");
+        hexes.append(svg("polygon", { points: pts, fill: ramp(t), stroke: ramp(t), "stroke-width": 0.4 }));
+      }
+      s.append(hexes);
+      s.append(svg("rect", { x: L, y: T, width: W - L - R, height: H - T - B, fill: "none", stroke: "#d9d2cb" }));
+      const xl = svg("text", { x: (L + W - R) / 2, y: H - 4, "text-anchor": "middle", class: "axis-title" });
+      xl.textContent = "distance in ρ (physical)";
+      const yl = svg("text", { x: 10, y: (T + H - B) / 2, "text-anchor": "middle", class: "axis-title", transform: `rotate(-90 10 ${(T + H - B) / 2})` });
+      yl.textContent = "distance in r (latent)";
+      s.append(xl, yl);
+      grid.append(el("figure", { class: "rsa-panel" }, [
+        el("h4", {}, [data.names[k] + " ", el("span", { class: "rsa-stat", text: `Spearman ${data.spearman[k].toFixed(2)}` })]),
+        s,
+      ]));
+    });
+  }
+
   // ------------------------------------------------------------------ small widgets
   function initFlipbook() {
     const fb = $("#flipbook");
@@ -529,6 +578,7 @@
     initRwChart();
     initFlipbook();
     initLatentTabs();
+    initRsa();
     initBibtex();
   });
 })();

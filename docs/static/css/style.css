@@ -348,6 +348,16 @@ table.data td.num { font-family: var(--mono); text-align: right; }
 .legend .chip { font-size: 0.82rem; }
 
 .findings { margin-top: 22px; }
+.runtime-plot { margin-top: 14px; max-width: 420px; }
+.rsa-card { margin-top: 26px; }
+.rsa-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.rsa-panel { margin: 0; }
+.rsa-panel h4 { font-size: 0.92rem; margin: 0; display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.rsa-panel .rsa-stat { font-size: 0.8rem; color: var(--ink-3); font-family: var(--mono); }
+.rsa-panel .axis-title { font-size: 10.5px; }
+.rsa-panel .tick-label { font-size: 10px; }
+.rsa-panel svg { width: 100%; height: auto; display: block; margin-top: 4px; overflow: visible; }
+@media (max-width: 800px) { .rsa-grid { grid-template-columns: 1fr 1fr; } }
 .finding { background: #fff; border-radius: var(--radius); border: 1px solid var(--line); padding: 18px 20px; }
 .finding h4 { font-size: 1rem; margin-bottom: 6px; }
 .finding p { margin: 0; color: var(--ink-2); font-size: 0.93rem; }
@@ -401,7 +411,6 @@ table.mini tr:last-child td, table.mini tr:last-child th { border-bottom: 0; }
 .latent-text p { color: var(--ink-2); }
 .checks { padding-left: 1.1em; color: var(--ink-2); }
 .checks li { margin-bottom: 8px; }
-.stats-table { margin: 14px 0 10px; }
 .stats-table td { font-family: var(--mono); text-align: center; }
 .stats-table thead th { text-align: center; }
 

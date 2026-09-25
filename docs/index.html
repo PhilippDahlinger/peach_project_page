@@ -195,9 +195,7 @@
     <div class="card explainer" id="tau-explainer">
       <div class="explainer-text">
         <h3>Why 4D space-time patches?</h3>
-        <p>Material properties show in the <i>dynamics</i> of a scene, not in a single frame. PEACH normalizes time, scales it by a factor <span class="math">τ</span> and then treats the sequence as one point cloud. Patches are then local in space <i>and</i> time, so the encoder can pick up motion without knowing which point is which.</p>
-        <p>Drag the slider. Each line is one frame of a 1D profile that is pushed down over time. The three axes are the position along the profile, its deformation and the scaled time <span class="math">τ·t</span>. Points are colored by the space-time patch they fall into.</p>
-        <p class="muted small">The 14 patch centers are sampled with farthest point sampling, as in PEACH. Colors follow the patches as you move the slider, so as few points as possible change color.</p>
+        <p>PEACH treats each point cloud sequence as one point cloud in space-time, with time scaled by <span class="math">τ</span>. Drag the slider to see how the patches change.</p>
         <label class="slider-label" for="tau-slider">
           <span>time scale <span class="math">τ</span> = <output id="tau-value">0.89</output></span>
         </label>
@@ -211,11 +209,9 @@
         </div>
         <div class="toggles tau3d-controls">
           <span class="muted small">Drag to rotate, scroll to zoom, right-drag to pan.</span>
-          <label><input type="checkbox" id="tau-autofit" checked> Auto-fit view</label>
           <button class="text-btn" id="tau-reset" type="button">Reset view</button>
         </div>
       </div>
-    </div>
     </div>
 
     <div class="grid-2 aux">
@@ -277,7 +273,6 @@
         <div class="seg" role="tablist" aria-label="Scene" id="mse-tabs"></div>
         <button class="text-btn" id="mse-table-toggle" aria-expanded="false">Show table</button>
       </div>
-      <p class="callout" id="mse-callout"></p>
       <div id="mse-plot" class="plot"></div>
       <div id="mse-table" class="table-wrap" hidden></div>
     </div>
@@ -294,6 +289,7 @@
       <div class="finding">
         <h4>No optimization loop</h4>
         <p>Test-time optimization via gradient descent through the simulator is strong on clean simulated data. It is ~140× slower, though (82&nbsp;s vs. 0.58&nbsp;s), and it degrades on noisy, occluded real-world observations.</p>
+        <div class="plot runtime-plot"><svg viewBox="0 0 400 104" role="img" aria-label="Inference time: PEACH 0.58 s, test-time optimization 82 s, FEM forward simulation 240 s (log scale)"><line x1="132.0" x2="132.0" y1="2" y2="84" stroke="#efe8e2"/><text x="132.0" y="100" text-anchor="middle" class="tick-label">0.1</text><line x1="182.0" x2="182.0" y1="2" y2="84" stroke="#efe8e2"/><text x="182.0" y="100" text-anchor="middle" class="tick-label">1</text><line x1="232.0" x2="232.0" y1="2" y2="84" stroke="#efe8e2"/><text x="232.0" y="100" text-anchor="middle" class="tick-label">10</text><line x1="282.0" x2="282.0" y1="2" y2="84" stroke="#efe8e2"/><text x="282.0" y="100" text-anchor="middle" class="tick-label">100</text><line x1="332.0" x2="332.0" y1="2" y2="84" stroke="#efe8e2"/><text x="332.0" y="100" text-anchor="middle" class="tick-label">1000 s</text><text x="0" y="20" class="row-label" font-weight="700">PEACH (ours)</text><path d="M132.0,8H166.2Q170.2,8 170.2,12V20Q170.2,24 166.2,24H132.0Z" fill="#1f77b4"/><text x="176.2" y="20" class="val-label">0.58 s</text><text x="0" y="47" class="row-label">Test-Time Opt.</text><path d="M132.0,35H273.7Q277.7,35 277.7,39V47Q277.7,51 273.7,51H132.0Z" fill="#bcbd22"/><text x="283.7" y="47" class="val-label">82 s</text><text x="0" y="74" class="row-label">FEM (forward only)</text><path d="M132.0,62H297.0Q301.0,62 301.0,66V74Q301.0,78 297.0,78H132.0Z" fill="#7f7f7f"/><text x="307.0" y="74" class="val-label">240 s</text></svg></div>
       </div>
       <div class="finding">
         <h4>Generalizes out of distribution</h4>
@@ -412,18 +408,19 @@
         <p>We project the latent material codes of all test tasks onto their first two principal components. The latent space has <b>no imposed structure</b>, yet physical properties emerge in it. On Trampoline, the first component separates tasks by relaxation time and the second by loading ratio.</p>
         <p>Two statistical checks back this up:</p>
         <ul class="checks">
-          <li><b>Distances mean something.</b> Pairwise task distances in latent space correlate with distances in physical parameter space. Spearman ρ is shown below, and all Mantel tests give <i>p</i>&nbsp;&lt;&nbsp;10<sup>−3</sup>.</li>
+          <li><b>Distances mean something.</b> Pairwise task distances in the latent space follow the distances in physical parameters (plots below; all Mantel tests give <i>p</i>&nbsp;&lt;&nbsp;10<sup>−3</sup>).</li>
           <li><b>More context, less uncertainty.</b> The variance of the latent code shrinks with context size at nearly the rate of averaging independent observations (β<sub>r</sub>&nbsp;≈&nbsp;1).</li>
         </ul>
-        <div class="scroll-x"><table class="mini stats-table">
-          <thead><tr><th></th><th>Deforming Block</th><th>Sheet Deform.</th><th>Bending Beam</th><th>Trampoline</th></tr></thead>
-          <tbody>
-            <tr><th>Spearman ρ</th><td>0.97</td><td>0.96</td><td>0.64</td><td>0.60</td></tr>
-            <tr><th>β<sub>r</sub></th><td>1.03</td><td>1.08</td><td>0.96</td><td>0.73</td></tr>
-          </tbody>
-        </table></div>
-        <p class="muted small">Trampoline's lower β<sub>r</sub> is expected. Its trajectories differ only in the ball's drop position and height, so extra context is partly redundant.</p>
+
       </div>
+    </div>
+
+    <div class="card rsa-card" id="rsa">
+      <div class="player-head">
+        <h3>Latent distances follow physical distances</h3>
+        <p class="muted">Every pair of test tasks is one sample: distance between their physical parameters <span class="math">ρ</span> vs. distance between their latent descriptions <span class="math">r</span>. Darker hexagons hold more task pairs.</p>
+      </div>
+      <div class="rsa-grid" id="rsa-grid"></div>
     </div>
   </div>
 </section>
@@ -434,11 +431,11 @@
     <h2 class="section-title">BibTeX</h2>
     <div class="bibtex">
       <button class="copy-btn" id="copy-bib" aria-label="Copy BibTeX">Copy</button>
-<pre><code id="bibtex-code">@article{dahlinger2026peach,
-  title   = {Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators},
-  author  = {Dahlinger, Philipp and Gyenes, Bal{\'a}zs and Freymuth, Niklas and Geminiani, Luca and W{\"u}rth, Tobias and Mitsch, Johannes and Klein, Nadja and K{\"a}rger, Luise and Neumann, Gerhard},
-  journal = {arXiv preprint arXiv:2605.20978},
-  year    = {2026}
+<pre><code id="bibtex-code">@inproceedings{dahlinger2026peach,
+  title     = {Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators},
+  author    = {Dahlinger, Philipp and Gyenes, Bal{\'a}zs and Freymuth, Niklas and Geminiani, Luca and W{\"u}rth, Tobias and Mitsch, Johannes and Klein, Nadja and K{\"a}rger, Luise and Neumann, Gerhard},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2026}
 }</code></pre>
     </div>
   </div>

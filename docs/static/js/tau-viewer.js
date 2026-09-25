@@ -26,11 +26,10 @@ function label(html, cls) {
   return new CSS2DObject(div);
 }
 
-function hintFor(step, F) {
-  const stat = ` <span class="muted">Patches currently span ${step.framesPerPatch.toFixed(1)} of ${F} frames on average.</span>`;
-  if (step.singleFrame) return "<b>Large τ: one frame per patch.</b> The frames are so far apart along the time axis that every patch stays inside a single frame, one on the left and one on the right. Each frame is encoded on its own, and motion across frames is invisible to a single patch." + stat;
-  if (step.framesPerPatch > 2.6) return "<b>Small τ: time barely counts.</b> The frames are squeezed together along the time axis, so a patch collects points from many frames that are close in space." + stat;
-  return "<b>Intermediate τ: local in space and time.</b> Each patch covers a compact space-time neighborhood of a few frames, so a token sees how the surface moves locally, without point correspondences." + stat;
+function hintFor(step) {
+  if (step.singleFrame) return "<b>Large \u03c4: one frame per patch.</b>";
+  if (step.framesPerPatch > 2.6) return "<b>Small \u03c4: patches mix many frames.</b>";
+  return "<b>Intermediate \u03c4: patches are local in space and time.</b>";
 }
 
 async function init() {
@@ -151,8 +150,8 @@ async function init() {
     t0.position.copy(toWorld(1.1, 0.02, 0));
     t1.position.copy(toWorld(1.1, 0.02, tau));
     t1.visible = tau > 0.35;
-    hint.innerHTML = hintFor(step, F);
-    if (document.getElementById("tau-autofit").checked) fit(false);
+    hint.innerHTML = hintFor(step);
+    fit(false);
   }
 
   // keep the current viewing direction and frame the scene. Only the near part of a long time
@@ -186,8 +185,7 @@ async function init() {
   setStep(+slider.value);
   fit(true);
   document.getElementById("tau-reset").addEventListener("click", () => fit(true));
-  document.getElementById("tau-autofit").addEventListener("change", (e) => { if (e.target.checked) fit(false); });
-  new ResizeObserver(() => { resize(); if (document.getElementById("tau-autofit").checked) fit(false); }).observe(host);
+  new ResizeObserver(() => { resize(); fit(false); }).observe(host);
 
   let visible = true;
   new IntersectionObserver((es) => es.forEach((e) => (visible = e.isIntersecting))).observe(host);
