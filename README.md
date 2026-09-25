@@ -29,7 +29,7 @@ docs/
   static/images/steps/           parts of Figure 1 used in the "How PEACH works" cards
   static/fonts/                  self-hosted web fonts
   static/videos/hero/            tightly cropped PEACH clips for the hero strip
-  static/videos/sim/<scene>/     <method>_task{1,2}.mp4 + .jpg poster
+  static/videos/sim/<scene>/     <method>.mp4 + .jpg poster (test task 2)
   static/data/realworld/         3D viewer scenes (<name>.json + <name>.bin)
   static/data/tau_patches.json   precomputed patches/colors for the τ explainer
 tools/
@@ -77,7 +77,8 @@ assigns points to their nearest center, and matches patch colors between neighbo
 assignment on point overlaps so that as few points as possible change color.
 
 **Simulation videos.** `python tools/convert_sim_gifs.py <videos_of_simulations> docs/static/videos/sim`
-re-encodes the supplementary GIFs. They are rendered on an exact chroma green, which is replaced by white.
+re-encodes the supplementary GIFs of test task 2 with fixed, zoomed-in crops per scene (`CROPS` in the script).
+They are rendered on an exact chroma green, which is replaced by white.
 
 ## Credits
 

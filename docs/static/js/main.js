@@ -22,10 +22,10 @@
     { id: "none", name: "No context" },
   ];
   const SCENES = [
-    { id: "deforming_block", name: "Deforming Block", fps: 7.41, frames: 52, ar: "322/358" },
-    { id: "sheet_deformation", name: "Sheet Deformation", fps: 7.14, frames: 51, ar: "432/232" },
-    { id: "bending_beam", name: "Bending Beam", fps: 14.29, frames: 101, ar: "608/404" },
-    { id: "trampoline", name: "Trampoline", fps: 3.57, frames: 25, ar: "412/404" },
+    { id: "deforming_block", name: "Deforming Block", fps: 7.41, frames: 52, ar: "472/504" },
+    { id: "sheet_deformation", name: "Sheet Deformation", fps: 7.14, frames: 51, ar: "632/290" },
+    { id: "bending_beam", name: "Bending Beam", fps: 14.29, frames: 101, ar: "640/238" },
+    { id: "trampoline", name: "Trampoline", fps: 3.57, frames: 25, ar: "612/378" },
   ];
   // methods with a rollout video per scene (supplementary material)
   const VIDEO_METHODS = ["peach", "pstnet", "gnn", "mango", "oracle", "oracle_mgn", "nocontext", "nocontext_mgn"];
@@ -176,11 +176,10 @@
     const grid = $("#video-grid"), chips = $("#method-chips"), playBtn = $("#play-btn");
     const scrub = $("#scrub"), frameLabel = $("#frame-label");
     const fillScrub = syncRangeFill(scrub);
-    const state = { scene: "sheet_deformation", task: "task1", selected: new Set(["peach", "pstnet", "oracle", "nocontext"]), playing: true, rate: 1, visible: false, scrubbing: false };
+    const state = { scene: "sheet_deformation", selected: new Set(["peach", "pstnet", "oracle", "nocontext"]), playing: true, rate: 1, visible: false, scrubbing: false };
     let videos = [];
 
     segmented($("#scene-tabs"), SCENES, state.scene, (id) => { state.scene = id; renderChips(); renderVideos(); });
-    segmented($("#task-tabs"), [{ id: "task1", name: "Test task 1" }, { id: "task2", name: "Test task 2" }], state.task, (id) => { state.task = id; renderVideos(); });
     segmented($("#speed-tabs"), [{ id: 0.5, name: "0.5×" }, { id: 1, name: "1×" }, { id: 2, name: "2×" }], 1, (r) => { state.rate = r; videos.forEach((v) => (v.playbackRate = r)); });
 
     function available(m) { return !(MISSING[state.scene] || []).includes(m); }
@@ -216,7 +215,7 @@
       grid.className = "video-grid" + (ms.length === 1 ? " n1" : ms.length === 2 ? " n2" : "");
       grid.style.setProperty("--ar", scene.ar);
       videos = ms.map((m) => {
-        const base = `static/videos/sim/${scene.id}/${m}_${state.task}`;
+        const base = `static/videos/sim/${scene.id}/${m}`;
         const v = el("video", { src: `${base}.mp4`, poster: `${base}.jpg`, muted: "", playsinline: "", preload: "auto", "aria-label": `${METHODS[m].name} prediction` });
         v.muted = true;
         v.playbackRate = state.rate;
