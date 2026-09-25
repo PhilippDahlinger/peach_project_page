@@ -1,0 +1,53 @@
+% \section{Results}
+% \label{sec:results}
+
+\textbf{Simulation Results.}
+We evaluate the simulation fidelity using the \gls{mse} averaged across all steps of a complete rollout, on a test split whose physical properties and initial conditions are unseen during training.
+Figure~\ref{fig:main_results} shows that \gls{peach} outperforms the other learned point cloud encoders by a substantial margin.
+It also outperforms the mesh-based \gls{mango} on three out of four environments despite its privileged mesh context, which we attribute to the limited capacity of the shallow \gls{cnn} and Deep Sets encoder of \gls{mango}.
+\textit{Test-Time Optimization} is considerably less accurate than \gls{peach} on \texttt{Deforming Block} and on par on \texttt{Trampoline}, but matches the \textit{Oracle} on \texttt{Sheet Deformation} and achieves the lowest error on \texttt{Bending Beam}, at about $140$ times the inference time of \gls{peach} (Appendix~\ref{sec:runtime}).
+On \texttt{Bending Beam}, both \textit{Test-Time Optimization} and \gls{peach} surpass the \textit{Oracle}.
+We attribute this to approximation errors of the learned simulator.
+Since both methods infer their conditioning from observed deformations, they can compensate for such errors by representing an effective stiffness that reproduces the observed bending, even if it deviates from the true material parameters, whereas the \textit{Oracle} is bound to the ground truth parameters.
+\textit{Test-Time Optimization} performs this adaptation explicitly for each task, which explains its larger gain on the clean simulated observations.
+Replacing the simulator with the step-based \gls{mgn} generally reduces accuracy, even with oracle information.
+Figure~\ref{fig:task_overview} shows qualitative predictions of \gls{peach} across all four scenes, and Appendix~\ref{app:vis} provides additional qualitative results.
+
+\textbf{Real World Results.}
+Figure~\ref{fig:realworld_setup} shows an example trajectory of our real-world \texttt{Trampoline} setup. 
+A robot arm releases a ball of unknown size and weight above an elastic membrane of varying thickness.
+Figure~\ref{fig:qualitative_realworld} demonstrates that \gls{peach} is able to adapt to contexts from this real world setup without ever having seen real-world point clouds during training.
+Qualitatively, \gls{peach} adapts to the interaction dynamics determined by the ball's size and weight and the rubber sheet's thickness, accurately capturing the sheet deformation at peak elongation.
+In contrast, the \textit{No Context Encoding} baseline regresses to the mean, predicting only minimal deformation regardless of the physical parameters.
+
+Quantitatively, \gls{peach} outperforms all baselines, including the \textit{Oracle} with material parameters measured directly from the physical setup and \textit{Test-Time Optimization}, whose accuracy degrades on the noisy and partially occluded real-world observations.
+All methods perform well prior to ball-sheet contact, having learned to accurately predict free-fall dynamics, but baselines deteriorate significantly during the contact phase. 
+Toward the end of the trajectory, prediction error increases across all methods, which we attribute to the inherently chaotic post-bounce behavior of the ball, whose direction after impact is difficult to predict deterministically.
+Combined, these results indicate our method's ability to accurately simulate real-world scenes from only point cloud observations.
+
+\input{figures/generalizations_ablations}
+\textbf{Parameter Study.}
+We test the extrapolation capability of \gls{peach} using an additional, out-of-distribution set of \texttt{Deforming Block} tasks in simulation. As illustrated in Figure~\ref{fig:ood_split} of the Appendix, test tasks are drawn from the tails of the Poisson ratio distribution, ensuring that the evaluated material properties lie outside the training range.
+% , where the Poisson's ratio values for test tasks are sampled outside the training distribution.
+% Figure \ref{fig:generalizations_ablations} (right) further shows the out-of-distribution evaluation on \texttt{Deforming Block (OOD)}, where test tasks have Poisson's ratio values outside the training regime.
+Figure \ref{fig:generalizations_ablations} (right) in the Appendix shows that \gls{peach} remains close to the oracle performance even under this distribution shift, demonstrating that the learned latent material representation generalizes beyond the training distribution.
+A general analysis of performance as a function of context size is provided in Figure~\ref{fig:context_mse} of the Appendix~\ref{app:quant}.
+
+\input{figures/latent_wrap_figure}
+
+\textbf{Ablations.}
+Figure~\ref{fig:generalizations_ablations} (left, center) in the Appendix presents an ablation of the auxiliary losses on \texttt{Deforming Block} and \texttt{Sheet Deformation}.
+Removing both auxiliary losses leads to a substantial performance drop, confirming that auxiliary supervision is critical for learning a useful latent material representation.
+While \gls{peach} benefits from combining both losses, training with only the SDF auxiliary loss remains competitive.
+Since \gls{sdf} labels can be computed purely from mesh geometry, this is a practical option for settings where ground truth physical properties are unavailable.
+To test robustness to sensor artifacts, we corrupt the real-world context point clouds by removing $1\%$, $9\%$, or $25\%$ of the points in small patches and adding the same number of spurious points (Figure~\ref{fig:corruption} in Appendix~\ref{app:corruption}).
+\gls{peach} remains nearly unaffected by all corruption levels and stays more accurate than the \textit{Oracle} during the contact phase.
+Without data augmentation, its accuracy drops slightly on clean observations (Figure~\ref{fig:qualitative_realworld}, right) and considerably under high corruption, approaching the \textit{No Context} baseline at peak contact.
+
+
+\textbf{Latent Space Analysis.}
+Figure~\ref{fig:latent_space_vis_main} visualizes the PCA projection of the latent material codes encoded by \gls{peach} on the \texttt{Trampoline} dataset.
+Despite no explicit structure being imposed on the latent space, the projection reveals a clear organization: the first principal component separates tasks by relaxation time, while the second separates them by loading ratio.
+This emergent disentanglement of physically meaningful material properties suggests that \gls{peach} learns structured representations purely from point cloud observations. Latent space visualizations for all environments are provided in Figure~\ref{fig:latents_appendix} of the Appendix. A quantitative analysis in Appendix~\ref{app:latent_analysis} further shows that the variance of the latent description decreases with the context size at a rate close to averaging independent observations, and that distances between tasks in the latent space correlate strongly with distances between their physical parameters.
+
+

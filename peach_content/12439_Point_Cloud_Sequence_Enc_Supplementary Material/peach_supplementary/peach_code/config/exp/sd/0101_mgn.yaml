@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: mgn
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_sd_v1
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 0101_sd_mgn
+
+

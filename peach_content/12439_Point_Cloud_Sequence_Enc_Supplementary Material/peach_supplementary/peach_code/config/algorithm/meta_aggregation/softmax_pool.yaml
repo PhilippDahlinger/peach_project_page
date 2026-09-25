@@ -1,0 +1,5 @@
+name: softmax_pool
+beta_init: 1.0  # initial temperature value (higher -> more max-like)
+beta_trainable: True  # whether beta is learnable during training
+
+

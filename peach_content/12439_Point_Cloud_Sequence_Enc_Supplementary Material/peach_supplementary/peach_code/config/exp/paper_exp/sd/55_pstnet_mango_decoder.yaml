@@ -1,0 +1,17 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pstnet_mango_decoder
+  - override /dataset: sd_v1
+
+wandb:
+  enabled: True
+
+exp_name: 5501_sd_pstnet_mango_decoder
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

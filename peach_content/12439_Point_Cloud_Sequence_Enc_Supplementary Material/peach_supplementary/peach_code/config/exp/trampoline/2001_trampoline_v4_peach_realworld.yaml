@@ -1,0 +1,27 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: trampoline_pointpatch_encoder_mango_decoder
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4_realworld
+  - override /algorithm/meta_aggregation: softmax_pool
+
+
+wandb:
+  enabled: True
+
+resume_from_checkpoint: True
+old_exp_folder: "output/hydra/training/2026-04-26/2004_trampoline_v4_peach_realworld/+ex=2001_trampoline_v4_peach_realworld,+pl=jsc_clusterduck"
+
+
+exp_name: 2004d2_trampoline_v4_peach_realworld
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+
+
+
+

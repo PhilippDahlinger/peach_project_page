@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: ggns_sd
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_ggns_sd_v1
+
+
+algorithm:
+  input_mesh_noise: 0.002
+
+wandb:
+  enabled: True
+
+exp_name: 5803_sd_ggns_seed_1002
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1002
+#      seed:  1003, 1004

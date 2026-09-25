@@ -1,0 +1,14 @@
+# @package _global_
+
+ # TODO get a stable training :(
+defaults:
+  - override /algorithm: ggns_sd
+  - override /dataset: # TODO
+  - override /algorithm/evaluator: bbv_test_evaluator
+  - override /loading: bbv_loading
+
+loading:
+  root_path: #todo, on bwuni
+
+
+exp_name: EVAL_58_sd_ggns

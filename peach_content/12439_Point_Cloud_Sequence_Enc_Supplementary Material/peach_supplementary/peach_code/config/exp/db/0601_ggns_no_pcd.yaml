@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: ggns_db
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_ggns_db_v4
+
+algorithm:
+  no_pcd: True
+  pointcloud_dropout: 2.0
+
+wandb:
+  enabled: True
+
+exp_name: 0604_db_ggns_no_pcd_singe_jsc
+seed: 23
+
+#hydra:
+#  sweeper:
+#    grid_params:
+#      algorithm.input_mesh_noise: 0.0007, 0.001, 0.002, 0.005

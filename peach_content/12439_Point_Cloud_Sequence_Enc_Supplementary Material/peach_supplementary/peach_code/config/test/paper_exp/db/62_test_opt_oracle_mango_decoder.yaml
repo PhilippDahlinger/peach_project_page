@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mango_decoder
+  - override /dataset: db_v4
+  - override /algorithm/evaluator: test_evaluator
+  - override /loading: db_loading
+
+algorithm:
+  test_opt_oracle: True
+
+#dataset:
+#  root: ../datasets/pc_mangodb_v4.hdf5
+
+loading:
+  root_path: output/checkpoints/db/5601_db_oracle_mango_decoder
+  output_path: output/evaluations/paper_exp/db_test_opt
+
+
+exp_name: EVAL_62_db_test_opt_oracle_mango_decoder

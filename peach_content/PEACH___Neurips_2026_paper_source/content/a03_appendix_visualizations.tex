@@ -1,0 +1,28 @@
+\section{Visualizations} \label{app:vis}
+
+We provide additional qualitative results comparing all evaluated methods on all four datasets.
+
+\subsection{Latent Space Visualizations} \label{app:latent_vis}
+
+Figure~\ref{fig:latents_appendix} shows a PCA projection of the task-level latent codes $\mathbf{r}$ produced by the \gls{peach} encoder across all four environments. Each point corresponds to a single test task, colored by its material properties. 
+The smooth, structured organization of the latent space, particularly the near-perfect one-dimensional manifold recovered for the single-parameter environments \texttt{Sheet Deformation} and \texttt{Deforming Block}, demonstrates that the encoder successfully disentangles material properties from trajectory-level variation, without any explicit supervision on the latent space geometry.
+
+
+
+\input{figures/latents_visualization}
+
+\subsection{Qualitative Trajectory Predictions}
+
+We provide qualitative trajectory predictions for all evaluated datasets.
+Figure~\ref{fig:qualitative_trajectories_db} shows results for the \texttt{Deforming Block} dataset,
+Figure~\ref{fig:qualitative_trajectories_sd} for \texttt{Sheet Deformation},
+Figure~\ref{fig:qualitative_trajectories_trampoline} for the \texttt{Trampoline} dataset, and
+Figure~\ref{fig:qualitative_trajectories_bbv} for \texttt{Bending Beam}.
+
+\input{figures/qualitative_trajectories_db}
+
+\input{figures/qualitative_trajectories_sd}
+
+\input{figures/qualitative_trajectories_trampoline}
+
+\input{figures/qualitative_trajectories_bbv}

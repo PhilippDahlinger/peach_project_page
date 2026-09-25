@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mango_decoder
+  - _self_
+
+algorithm:
+  data_modalities: ['pc', 'mesh', 'sdf']
+  oracle: True
+model_checkpoints:
+  - checkpoints/trampoline_v4/5603d2_trampoline_v4_oracle_mango_decoder/+ex_exp_v4=56_oracle_mango_decoder,+pl=jsc_clusterduck/seed_1001/checkpoints/best-checkpoint-epoch=692-val_ml_loss=0.00000275.ckpt
+  - checkpoints/trampoline_v4/5603d2_trampoline_v4_oracle_mango_decoder/+ex_exp_v4=56_oracle_mango_decoder,+pl=jsc_clusterduck/seed_1002/checkpoints/best-checkpoint-epoch=671-val_ml_loss=0.00000267.ckpt
+  - checkpoints/trampoline_v4/5603d2_trampoline_v4_oracle_mango_decoder/+ex_exp_v4=56_oracle_mango_decoder,+pl=jsc_clusterduck/seed_1003/checkpoints/best-checkpoint-epoch=683-val_ml_loss=0.00000253.ckpt
+  - checkpoints/trampoline_v4/5603d2_trampoline_v4_oracle_mango_decoder/+ex_exp_v4=56_oracle_mango_decoder,+pl=jsc_clusterduck/seed_1004/checkpoints/best-checkpoint-epoch=686-val_ml_loss=0.00000273.ckpt
+
+#latex_ids: []  # leave blank for all
+#sphere_ids: []  # leave blank for all
+#traj_filter: []
+
+exp_name: 01_oracle_mango
+

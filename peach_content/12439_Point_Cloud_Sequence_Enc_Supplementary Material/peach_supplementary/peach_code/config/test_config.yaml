@@ -1,0 +1,34 @@
+# The base Hydra config
+
+defaults:
+  - dataset: ???
+  - algorithm: ???
+  - loading: base_loading
+  - trainer: single_gpu_standard
+  - override hydra/sweeper: list
+  - _self_
+
+exp_name: ???
+
+wandb:
+  enabled: False # not using wandb logger for testing
+
+seed: 0
+
+dataset:
+  train_dataset:
+    dataset_size: 2  # artificially reduce train dataset size since it is only needed for initialization
+
+
+hydra:
+  run:
+    dir: ./output/hydra/test/${now:%Y-%m-%d}/${exp_name}
+  sweep:
+    dir: ./output/hydra/test/${now:%Y-%m-%d}
+    subdir: ${exp_name}/${sub_dir_shortener:${hydra:job.override_dirname}, 3, False}/seed_${format:${seed}, '{:02d}'}
+#    subdir: ${recorder.wandb.group_name}/${recorder.wandb.job_type}/seed_${seed}
+  job:
+    config:
+      override_dirname:
+        exclude_keys:
+          - seed

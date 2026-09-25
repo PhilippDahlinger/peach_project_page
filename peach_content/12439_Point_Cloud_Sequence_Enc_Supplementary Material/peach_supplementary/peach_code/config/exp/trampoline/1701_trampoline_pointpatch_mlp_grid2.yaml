@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: trampoline_pointpatch_encoder_mlp
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v5
+  - override /algorithm/meta_aggregation: softmax_pool
+
+wandb:
+  enabled: True
+
+
+exp_name: 1702_trampoline_pointpatch_mlp_grid2
+
+
+hydra:
+  sweeper:
+    grid_params:
+      algorithm.encoder.pooling.n_layers: 1, 4, 8
+

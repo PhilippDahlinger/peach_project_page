@@ -1,0 +1,17 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: cnn_deepset_mango_decoder
+  - override /dataset: trampoline_v5
+
+wandb:
+  enabled: True
+
+exp_name: 5301_trampoline_cnn_deepset_mango_decoder
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

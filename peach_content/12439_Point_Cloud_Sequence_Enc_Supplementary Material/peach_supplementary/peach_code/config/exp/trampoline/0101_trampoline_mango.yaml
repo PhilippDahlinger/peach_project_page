@@ -1,0 +1,32 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: cnn_deepset_mango_decoder
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4
+  - override /algorithm/meta_aggregation: softmax_pool
+#  - override /trainer: single_cpu_standard
+
+#dataset:
+#  cut_length: 10
+#  train_dataset:
+#    dataset_size: 10
+#  eval_dataset:
+#    dataset_size: 10
+
+wandb:
+  enabled: True
+
+
+exp_name: 0103_trampoline_mango
+
+
+#  optimizer:
+#    weight_decay: 5.0e-4
+
+
+#hydra:
+#  sweeper:
+#    grid_params:
+#      algorithm.encoder.time_scale: 4.0, 8.0, 16.0, 32.0, 64.0
+

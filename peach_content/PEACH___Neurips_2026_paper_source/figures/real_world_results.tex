@@ -1,0 +1,76 @@
+% \begin{figure}[t]
+%   \centering
+%     % \makebox[\textwidth][c]{
+%     %     \input{figures/quantitative_results/legend_realworld}
+%     % }
+%     \makebox[\textwidth][r]{%
+%   \makebox[0.77\textwidth][c]{%
+%     \input{figures/quantitative_results/legend_realworld}%
+%   }%
+% }
+%   \begin{minipage}{0.22\textwidth}
+%     \includegraphics[width=\textwidth, trim={0 30mm 0 100mm}, clip]{figures/qualitative_realworld_data/03.png}      
+%   \end{minipage}\hfill
+%   \begin{minipage}{0.44\textwidth}
+%     \includegraphics[width=\textwidth]{figures/qualitative_realworld_data/real_world_qualitative2.pdf}    
+%   \end{minipage}
+%   \begin{minipage}{0.33\textwidth}
+%         \centering
+%         \scalebox{0.73}{\input{figures/quantitative_realworld_data/loss_over_time_per_method}}\\
+%         % {\footnotesize\texttt{Trampoline (Real-world)}}
+%     \end{minipage}
+%     \hfill
+% \caption{Real-world trampoline experiment. \textbf{Left:} Physical setup with a ball interacting with a latex sheet. \textbf{Center:} Qualitative comparison at $t=0.2\,\text{s}$ (maximal sheet elongation) between a model without context encoding and PEACH. The red point cloud shows the ground truth observations; note that the very bottom of the sheet is occluded by the ball and thus absent from the point cloud. \textbf{Right:} Point-to-mesh distance aggregated over all real-world trials, plotted over time, with ball-sheet contact occurring between $t=0.12\,\text{s}$ and $t=0.28\,\text{s}$.}
+%   \label{fig:qualitative_realworld}
+% \end{figure}
+
+\begin{figure}[t]
+  \centering
+
+\makebox[\textwidth][l]{%
+\scalebox{1.01}{
+  \hspace*{0.015\textwidth}%
+  \begin{minipage}[t]{0.25\textwidth}
+    \vspace{2pt}
+    \includegraphics[
+      width=\textwidth,
+      trim={0 30mm 0 100mm},
+      clip
+    ]{figures/qualitative_realworld_data/03.png}      
+  \end{minipage}\hspace{0.030\textwidth}%
+  \begin{minipage}[t]{0.68\textwidth}
+    \vspace{0pt}
+
+    % Legend next to the left image, not above the whole figure
+
+    \input{figures/quantitative_results/legend_realworld}\\[-7mm]
+
+    \hspace{0.000\textwidth}
+    \begin{minipage}[t]{0.57\textwidth}
+      \vspace{0pt}
+      \includegraphics[
+        width=\textwidth
+      ]{figures/qualitative_realworld_data/real_world_qualitative2.pdf}
+    \end{minipage}\hspace{0.025\textwidth}%
+      \hspace{-0pt}
+    \begin{minipage}[t]{0.30\textwidth}
+      \vspace{0pt}   % was -10pt — now pushes the plot down instead of up
+      \centering
+      \scalebox{0.60}{%
+        \input{figures/quantitative_realworld_data/loss_over_time_per_method}%
+      }
+    \end{minipage}
+  \end{minipage}%
+}
+}
+
+    \caption{
+        Real-world \texttt{Trampoline} scene.
+        \textbf{Left:} Physical setup with a ball bouncing on a latex sheet.
+        \textbf{Center:} Qualitative comparison at $t{=}0.2\,\text{s}$ (maximal sheet stretching) between \gls{peach} and a context-free simulator.
+        The \textcolor{red}{red} point cloud shows the ground truth observations. The  bottom of the sheet is occluded by the ball and thus absent from the point cloud.
+        \textbf{Right:} Mean point-to-mesh distance over all real-world trials, plotted over time, with ball-sheet contact occurring in $[0.12,0.28]\, \text{s}$.
+    }
+    \vspace{-0.4cm}
+    \label{fig:qualitative_realworld}
+\end{figure}

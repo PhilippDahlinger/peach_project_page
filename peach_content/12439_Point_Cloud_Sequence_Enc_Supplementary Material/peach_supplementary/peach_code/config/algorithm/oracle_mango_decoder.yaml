@@ -1,0 +1,27 @@
+
+defaults:
+  - /network/pc_encoder@encoder: dummy
+  - /network/mat_prop_head@mat_prop_head: mlp
+  - /network/simulator@simulator: mango_decoder
+  - meta_aggregation: softmax_pool
+  - evaluator: base_evaluator
+  - optimizer: adamw
+  - scheduler: standard
+
+
+type: pc_to_sim
+one_step_training: False  # Flag to check training loop to handle one step training (MGN and GGNS)
+check_val_every_n_epoch: ${trainer.check_val_every_n_epoch}
+material_properties: True  # oracle material properties
+mat_prop_loss_weight: 0.0 # no mat prop loss
+sdf_loss_weight: 0.0
+predict_sdf: False  # whether to predict sdf values in addition to material properties
+predict_mat_prop: False  # whether to predict material properties
+checkpoint_metric: val_ml_loss
+
+
+# dataset related configs
+data_modalities: ['pc', 'mesh']
+pc_preprocessing: ${dataset.pc_preprocessing}
+
+

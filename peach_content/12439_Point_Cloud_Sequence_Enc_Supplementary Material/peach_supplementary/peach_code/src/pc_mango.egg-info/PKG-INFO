@@ -1,0 +1,21 @@
+Metadata-Version: 2.4
+Name: pc-mango
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.12
+Requires-Dist: fpsample>=0.3.3
+Requires-Dist: h5py>=3.15.1
+Requires-Dist: hydra-list-sweeper>=1.1.0
+Requires-Dist: lightning>=2.5.6
+Requires-Dist: matplot2tikz>=0.5.1
+Requires-Dist: matplotlib>=3.10.7
+Requires-Dist: meshio>=5.3.5
+Requires-Dist: open3d>=0.19.0
+Requires-Dist: pandas>=2.3.3
+Requires-Dist: plotly>=6.4.0
+Requires-Dist: scipy>=1.16.3
+Requires-Dist: seaborn>=0.13.2
+Requires-Dist: torch~=2.8
+Requires-Dist: torch-geometric>=2.7.0
+Requires-Dist: tqdm>=4.67.1
+Requires-Dist: wandb>=0.23.0

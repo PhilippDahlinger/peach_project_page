@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mgn
+  - override /dataset: step_trampoline_v4
+  - override /algorithm/evaluator: trampoline_sim_test_evaluator
+  - override /loading: trampoline_v4_loading
+
+loading:
+  root_path: output/checkpoints/trampoline_v4/5103d2_trampoline_v4_oracle_mgn
+
+exp_name: EVAL_51_trampoline_v4_oracle_mgn

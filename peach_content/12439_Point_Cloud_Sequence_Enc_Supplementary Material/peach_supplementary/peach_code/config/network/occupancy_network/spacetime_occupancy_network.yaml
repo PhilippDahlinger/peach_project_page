@@ -1,0 +1,7 @@
+name: spacetime_occupancy_network
+
+# TODO: adapt parameters
+
+embed_dim: 512  # Has to match the embed_dim of the tokenizer
+pos_encoder_n_freqs: 10
+decoder_dims: [-1, 512, 512, 2] # input dim will be determined automatically

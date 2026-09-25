@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mgn
+  - override /dataset: step_trampoline_v5
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 5101_trampoline_oracle_mgn
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004

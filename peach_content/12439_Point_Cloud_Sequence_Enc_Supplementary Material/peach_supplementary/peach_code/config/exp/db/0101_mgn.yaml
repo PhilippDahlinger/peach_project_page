@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: mgn
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_db_v4
+
+
+wandb:
+  enabled: True
+
+dataset:
+  train_dataset:
+    dataset_size: 1
+  eval_dataset:
+    dataset_size: 1
+
+
+exp_name: 0102_db_mgn_lichtenberg_test
+
+

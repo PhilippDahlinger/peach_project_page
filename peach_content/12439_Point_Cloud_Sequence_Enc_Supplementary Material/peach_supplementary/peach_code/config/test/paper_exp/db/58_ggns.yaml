@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: ggns_db
+  - override /dataset: step_ggns_db_v4
+  - override /algorithm/evaluator: test_evaluator
+  - override /loading: db_loading
+
+loading:
+  root_path: checkpoints/db/5804_db_ggns
+
+
+exp_name: EVAL_58_db_ggns

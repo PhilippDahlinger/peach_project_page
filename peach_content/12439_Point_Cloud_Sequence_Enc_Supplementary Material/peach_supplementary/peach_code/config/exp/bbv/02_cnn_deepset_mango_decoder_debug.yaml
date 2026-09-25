@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: cnn_deepset_mango_decoder
+  - override /dataset: bbv_v3
+
+wandb:
+  enabled: True
+
+exp_name: 0200_cnn_deepset_mango_decoder_debug
+
+

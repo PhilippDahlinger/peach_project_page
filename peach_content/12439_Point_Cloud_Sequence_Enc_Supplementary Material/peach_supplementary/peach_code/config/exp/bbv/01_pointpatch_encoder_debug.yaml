@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pointpatch_encoder_mango_decoder
+  - override /dataset: bbv_v3
+
+
+algorithm:
+  edge_loss_weight: 20
+  edge_loss_type: length   # length or vector
+  simulator:
+    n_layers: 20
+    dilation_in_later_conv_layers: True
+    latent_dimension: 64
+
+wandb:
+  enabled: True
+
+exp_name: 0100_pointpatch_encoder_debug
+

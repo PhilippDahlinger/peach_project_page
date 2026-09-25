@@ -1,0 +1,26 @@
+# The base Hydra config
+
+defaults:
+  - override hydra/sweeper: list
+  - _self_
+
+exp_name: 0101_demo_clusterduck
+
+
+seed: 0
+
+hydra:
+  run:
+    dir: ./output/hydra/training/${now:%Y-%m-%d}/${exp_name}
+  sweep:
+    dir: ./output/hydra/training/${now:%Y-%m-%d}
+    subdir: ${exp_name}/${sub_dir_shortener:${hydra:job.override_dirname}, 3, False}/seed_${format:${seed}, '{:02d}'}
+  job:
+    config:
+      override_dirname:
+        exclude_keys:
+          - seed
+
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004

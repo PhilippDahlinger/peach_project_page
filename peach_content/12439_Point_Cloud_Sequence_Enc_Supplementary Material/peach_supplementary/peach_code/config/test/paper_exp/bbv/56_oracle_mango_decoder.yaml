@@ -1,0 +1,17 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mango_decoder
+  - override /dataset: bbv_v3
+  - override /algorithm/evaluator: bbv_test_evaluator
+  - override /loading: bbv_loading
+
+loading:
+  root_path: checkpoints/bbv/5604_bbv_oracle_mango_decoder
+
+#algorithm:
+#  edge_loss_weight: 0.1
+#  edge_loss_type: length   # length or vector
+
+
+exp_name: EVAL_666_trampoline_v4_oracle_mango_decoder

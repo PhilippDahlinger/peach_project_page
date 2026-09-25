@@ -1,0 +1,58 @@
+name: gnn_encoder
+
+# Final output dimension
+output_dim: 64
+
+# ============== Tokenizer Config ==============
+tokenizer:
+  # MLP dimensions for the tokenizer
+  mlp_1_dims: [3, 16, 32]  # Input -> hidden layers
+  mlp_2_dims: [64, 32, 16]  # Hidden -> output (note: first dim must be 2x last dim of mlp_1)
+  
+  # Grouping parameters
+  group_size: 16  # Number of points per neighborhood
+  sampling_ratio: 0.1  # Fraction of points to use as centers (via FPS)
+  
+  # Token embedding dimension (output of tokenizer per token)
+  embed_dim: 16
+  
+  # Other settings
+  random_start: true  # Random start for FPS
+  padding_value: 0.0
+
+# ============== Graph Builder Config ==============
+graph:
+  # Number of neighbors to connect within the same timestep
+  k_same_time: 4
+  
+  # Number of neighbors to connect in adjacent timesteps (t-1 and t+1)
+  k_one_step: 2
+  
+  # Number of neighbors to connect in timesteps two steps away (t-2 and t+2)
+  k_two_step: 1
+  
+  # Fourier encoding parameters for time
+  time_encoding:
+    num_frequencies: 8  # Number of frequency bands for Fourier encoding
+
+# ============== Message Passing Network Config ==============
+mpn:
+  n_layers: 5           # Number of message passing layers
+  latent_dim: 64       # Hidden/latent dimension
+  activation: "leakyrelu"  # Activation function: "leakyrelu", "relu", "silu"
+  aggr: "mean"          # Aggregation method: "mean" or "sum"
+  use_hidden_layers: true  # Use hidden layers in MLPs
+  dropout_embedding: 0.1  # Embedding dropout (was previously `dropout`)
+  dropout_node: 0.1       # Dropout applied to node update output before layer-norm
+  dropout_edge: 0.1       # Dropout applied to edge update output before layer-norm
+  drop_edge_p: 0.1        # DropEdge probability applied during training
+
+# ============== Readout Config ==============
+readout:
+  type: "attention"  # Options: "mean", "max", "attention", "gated"
+  
+  # For attention readout only
+  attention_hidden_dim: null  # If null, uses latent_dim
+
+  # Dropout applied to weighted/gated features before aggregation (attention & gated only)
+  dropout: 0.1

@@ -1,0 +1,45 @@
+defaults:
+  - optimizer: adamw
+  - scheduler: standard
+  - evaluator: test_evaluator  # to  get batch size for validation split
+
+type: ggns
+check_val_every_n_epoch: ${trainer.check_val_every_n_epoch}
+checkpoint_metric: val_ml_loss
+
+# GNN Architecture (matching hdf5_plate_lightweight.yaml)
+activation_function: leakyrelu
+aggregation_function: mean
+dropout: 0.0
+latent_dimension: 128
+latent_normalization: None
+num_blocks: 15
+num_layers: 1
+use_global_features: False
+use_residual_connections: True
+output_layer: False
+mlp_decoder: True
+hetero: False
+mgn_hetero: False
+
+# Dataset-related (passed through to algorithm)
+connectivity_setting: ${dataset.train_dataset.connectivity_setting}
+use_mesh_coordinates: ${dataset.train_dataset.use_mesh_coordinates}
+use_colors: ${dataset.train_dataset.use_colors}
+is_3d: ${dataset.is_3d}
+
+# Training hyperparameters
+input_mesh_noise:  0.0005
+input_pcd_noise: 0.0
+pointcloud_dropout: 0.5
+loss_normalizer: 1
+
+# Pipeline compatibility
+pc_preprocessing: ${dataset.pc_preprocessing}
+data_modalities: ['mesh']
+
+
+# Evaluation settings
+eval_mode: k-hop
+eval_k: 2
+no_pcd: False

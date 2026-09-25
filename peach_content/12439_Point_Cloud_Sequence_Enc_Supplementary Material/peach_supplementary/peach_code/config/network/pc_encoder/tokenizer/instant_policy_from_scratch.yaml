@@ -1,0 +1,7 @@
+name: instant_policy
+
+checkpoint: null # No checkpoint, training from scratch
+embed_dim: 512 # Match the instant policy input dimension
+pos_encoder_n_freqs: 10
+ratios: [0.4, 0.25]  # how to select ratio for fps
+scales: [1.0, 0.75]  # how to scale the point cloud before the Pos encoding

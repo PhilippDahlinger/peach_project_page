@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: ggns_sd
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_ggns_sd_v1
+
+dataset:
+  train_dataset:
+    dataset_size: 2
+  eval_dataset:
+    dataset_size: 1
+
+
+wandb:
+  enabled: False
+
+exp_name: 0401_sd_ggns_debug

@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mango_decoder
+  - override /dataset: bbv_v3
+
+wandb:
+  enabled: True
+
+#resume_from_checkpoint: True
+#old_exp_folder: "output/hydra/training/2026-04-25/5601_bbv_oracle_mango_decoder/+ex_exp=56_oracle_mango_decoder,+pl=jsc_clusterduck"
+
+algorithm:
+  edge_loss_weight: -1
+  edge_loss_type: length   # length or vector
+
+exp_name: 6603_bbv_oracle_mango_decoder
+
+seed: 1005
+
+hydra:
+  sweeper:
+    grid_params:
+      algorithm.edge_loss_weight: 10, 20
+      algorithm.edge_loss_type: length, vector
+

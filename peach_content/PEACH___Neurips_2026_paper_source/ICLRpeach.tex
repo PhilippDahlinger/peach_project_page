@@ -1,0 +1,77 @@
+
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2026_conference,times}
+\usepackage{booktabs}
+
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage[x11names]{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{tikz}           % Core TikZ drawing
+\usepackage{pgfplots}       % For axis and legend
+\usepackage{twemojis}
+\pgfplotsset{compat=1.18}   % Match your PGFPlots version
+
+% \title{Point-cloud Encoding for Accurate Context Handling for Graph Network Simulators}
+% \title{Accurate Material Conditioning of Graph Network Simulators from Point Cloud Sequences}
+\title{Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators}
+
+\input{iclr2026/definitions/acronyms}
+\input{iclr2026/definitions/authors}
+\input{iclr2026/definitions/math_commands}
+
+% Custom camera-ready flag!
+\newif\ifcameraready
+\camerareadytrue  % Uncomment for camera-ready version, but NOT for submission.
+ 
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+\newcommand{\todo}[1]{\textcolor{teal}{#1}}
+
+\ifcameraready
+    \iclrfinalcopy 
+\fi
+
+\begin{document}
+
+\maketitle
+
+\input{iclr2026/content/01_abstract}
+\input{iclr2026/content/02_introduction}
+\input{iclr2026/content/03_method}
+\input{iclr2026/content/04_experiments}
+\input{iclr2026/content/05_results}
+\input{iclr2026/content/06_conclusion}
+
+
+\ifcameraready   
+    \subsubsection*{Acknowledgments}
+    This work is part of the DFG AI Resarch Unit 5339 regarding the combination of physics-based
+    simulation with AI-based methodologies for the fast maturation of manufacturing processes. The
+    financial support by German Research Foundation (DFG, Deutsche Forschungsgemeinschaft) is
+    gratefully acknowledged. The authors acknowledge support by the state of Baden-Württemberg
+    through bwHPC, as well as the HoreKa supercomputer funded by the Ministry of Science, Research
+    and the Arts Baden-Württemberg and by the German Federal Ministry of Education and Research. This work has been supported by the German Federal Ministry of Research, Technology, and Space (BMFTR) under the Robotics Institute Germany (RIG).
+\fi
+
+
+\bibliography{peach}
+\bibliographystyle{iclr2026_conference}
+
+\newpage
+
+\appendix
+
+\input{iclr2026/content/07_appendix_methods_and_hps}
+\input{iclr2026/content/08_datasets_information}
+\input{iclr2026/content/09_appendix_visualizations}
+
+
+
+
+
+
+\end{document}

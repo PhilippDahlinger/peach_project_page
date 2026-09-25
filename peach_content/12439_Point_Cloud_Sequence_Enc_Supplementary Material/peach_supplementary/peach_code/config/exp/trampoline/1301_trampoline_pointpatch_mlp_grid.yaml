@@ -1,0 +1,31 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: trampoline_pointpatch_encoder_mlp
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4
+  - override /algorithm/meta_aggregation: softmax_pool
+#  - override /trainer: single_cpu_standard
+
+wandb:
+  enabled: True
+
+#dataset:
+#  train_dataset:
+#    dataset_size: 10  # artificially reduce dataset size for debugging
+#  eval_dataset:
+#    dataset_size: 10  # artificially reduce dataset size for debugging
+
+
+exp_name: 1305_trampoline_pointpatch_mlp_grid_kluster_debug
+
+
+hydra:
+  sweeper:
+    grid_params:
+      algorithm.encoder.time_scale: 0.3, 1.0, 4.0
+      algorithm.encoder.color_based_collider_ratio: 0.5, 1.0
+      algorithm.encoder.color_based_num_centers: 500, 1000
+      algorithm.encoder.patch_size: 32, 64
+
+

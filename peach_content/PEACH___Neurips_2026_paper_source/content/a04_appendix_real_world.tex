@@ -1,0 +1,75 @@
+\section{Real World Experiments} \label{app:real}
+
+We create a real-world version of \textbf{Trampoline} dataset for use in our sim to real experiments.
+To mimic the simulated scene, solid balls of various materials and densities (see Table \ref{tab:real_spheres}) are dropped into rubber sheets of various thicknesses (see Table \ref{tab:real_sheets}).
+The balls are dropped using a Franka Emika Panda robot, where the in-plane drop position is sampled from a volume of \SI{4}{\cm} x \SI{4}{\cm} x \SI{5}{\cm}.
+The scene is recorded using a StereoLabs Zed Mini stereo camera at a resolution of $720$x$1280$ frame rate of \SI{30}{fps}.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{c c l}
+\toprule
+\textbf{Diameter} (\si{\mm}) & \textbf{Mass} (\si{\g}) & \textbf{Material} \\
+\midrule
+40 & 269 & Steel Solid \\
+40 & 69  & Steel Hollow \\
+50 & 110 & Steel Hollow \\
+60 & 162 & Steel Hollow \\
+40 & 21  & PLA 50\% Infill \\
+\bottomrule
+\end{tabular}
+\vspace{0.1cm}
+\caption{Sphere specifications used in the real-world experiments.}
+\label{tab:real_spheres}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{l c c}
+\toprule
+\textbf{Color} & \textbf{Thickness} (\si{\mm}) & \textbf{Average Density} (\si{\kg\per\m\cubed}) \\
+\midrule
+Black  & 0.381  & 992.7 \\
+Green  & 0.254  & 992.7 \\
+Yellow & 0.1524 & 992.7 \\
+\bottomrule
+\end{tabular}
+\vspace{0.1cm}
+\caption{Sheet specifications used in the real-world experiments.}
+\label{tab:real_sheets}
+\end{table}
+
+Depth estimates for each recorded frame are recomputed using FoundationStereo~\citep{FoundationStereo} (smaller architecture based on Vit-small).
+Images are resized to $480$x$853$ and are converted into point clouds by unprojecting the depth using the cameras' intrinsic parameters.
+The camera extrinsics are calibrated by mounting Aruco markers on the frame around the rubber sheet and optimizing for minimal reprojection error (OpenCV's \texttt{solvePnPRansac}).
+Point clouds are then transformed into a canonical world frame such that the bottom left corner of the sheet is at the origin and the sheet is on the xy plane.
+
+We discard time steps before the ball begins to fall and limit trajectories to 20 time steps (approx. \SI{0.667}{\s}).
+Points in the background of the scene are cropped out, and voxel downsampling is applied with a voxel edge length of \SI{5}{\mm}.
+To remove spurious artifacts, any points that have fewer than $20$ neighbours within a radius of \SI{15}{\mm} are filtered out.
+Finally, \gls{fps}~\citep{ruizhongtai2017pointnet} is applied to reduce the point clouds to 2048 points.
+
+Sphere points are identified via color segmentation, isolating the distinctly colored ball from the scene.
+The color labels are refined through an iterative algorithm that updates each point's label based on its own color and the colors of its neighbors, smoothing spurious misclassifications at object boundaries.
+Given the known sphere diameter, a spherical mask is fitted to the identified sphere points by optimizing the center position, which is then used to remove robot arm points that fall outside the mask.
+Finally, \gls{fps} is applied to reduce the point clouds to 1024 points.
+
+
+\subsection{Robustness to Corrupted Observations}
+\label{app:corruption}
+
+Real-world point clouds can contain missing regions, for example due to occlusions or reflective surfaces, as well as spurious points from reconstruction errors. To evaluate how robust \gls{peach} is to such artifacts, we corrupt the context observations of the real-world \texttt{Trampoline} scene at test time.
+
+\paragraph{Setup.}
+We use the \gls{peach} model from the main experiments, as well as a \gls{peach} model trained with the identical setup but without data augmentation. For each corruption level, we remove $1\%$, $9\%$, or $25\%$ of the points of each context point cloud, which we refer to as low, medium, and high corruption. Instead of removing points uniformly at random, we remove them in small spatially connected patches, which resembles missing regions in real sensor data. We additionally insert the same number of spurious points at random locations in the scene to simulate reconstruction artifacts. Only the context trajectories are corrupted. The encoder infers the latent material description from the corrupted context, and the simulator predicts the target trajectory from it. We evaluate this prediction against the uncorrupted observations of the target trajectory using the same point-to-mesh distance as in Figure~\ref{fig:qualitative_realworld}. Note that these corruptions are similar in kind to the region dropout and point artifacts used in our data augmentation, but they are applied to real-world instead of simulated observations and at levels that we did not tune for this evaluation.
+
+\paragraph{Results.}
+Figure~\ref{fig:corruption} shows the results. \gls{peach} handles all three corruption levels similarly well, and its errors remain close to the uncorrupted case throughout the trajectory. Even under high corruption, \gls{peach} is clearly more accurate than the \textit{Oracle} during the contact phase, although the \textit{Oracle} does not rely on the context observations and is therefore unaffected by the corruption. In contrast, the \gls{peach} model trained without data augmentation deteriorates considerably under high corruption, and its error at the peak of the contact phase approaches that of the \textit{No Context} baseline. This shows that data augmentation is essential for the robustness of \gls{peach} to corrupted real-world observations.
+
+\begin{figure}[t]
+    \centering
+    \makebox[\textwidth][c]{\input{figures/quantitative_results/legend_corruption}}\\[-2mm]
+    \input{figures/quantitative_realworld_data/loss_over_time_corruption}
+    \caption{Mean point-to-mesh distance on the real-world \texttt{Trampoline} scene with corrupted context observations. Low, medium, and high corruption remove $1\%$, $9\%$, and $25\%$ of the context points in small patches and add the same number of spurious points, while the target observations used for evaluation remain uncorrupted. The right panel shows a zoomed view of the contact phase, marked by the dashed rectangle in the left panel.}
+    \label{fig:corruption}
+\end{figure}

@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mango_decoder
+  - override /dataset: trampoline_v4
+  - override /algorithm/evaluator: trampoline_sim_test_evaluator
+  - override /loading: trampoline_v4_loading
+
+loading:
+  root_path: output/checkpoints/trampoline_v4/5603d2_trampoline_v4_oracle_mango_decoder
+
+
+exp_name: EVAL_56_trampoline_v4_oracle_mango_decoder

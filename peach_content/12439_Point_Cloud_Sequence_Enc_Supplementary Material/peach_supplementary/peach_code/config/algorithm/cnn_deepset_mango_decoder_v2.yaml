@@ -1,0 +1,28 @@
+
+defaults:
+  - /network/mesh_encoder@encoder: cnn_deepset
+  - /network/mat_prop_head@mat_prop_head: mlp
+  - /network/simulator@simulator: mango_decoder_v2
+  - meta_aggregation: softmax_pool
+  - evaluator: base_evaluator
+  - optimizer: adamw
+  - scheduler: standard
+
+
+type: mesh_to_sim
+one_step_training: False  # Flag to check training loop to handle one step training (MGN and GGNS)
+check_val_every_n_epoch: ${trainer.check_val_every_n_epoch}
+material_properties: False  # no oracle material properties
+mat_prop_loss_weight: 0.02
+
+checkpoint_metric: val_ml_loss
+
+optimizer:
+  lr: 1.0e-5
+
+
+# dataset related configs
+data_modalities: ['mesh']
+pc_preprocessing: ${dataset.pc_preprocessing}
+
+

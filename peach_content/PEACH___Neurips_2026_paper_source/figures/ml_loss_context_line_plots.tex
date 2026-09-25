@@ -1,0 +1,14 @@
+\begin{figure}[htbp]
+    \centering
+    \makebox[\textwidth][c]{
+        \input{figures/quantitative_results/legend_appendix}
+    }
+    \includegraphics[width=0.245\textwidth]{figures/quantitative_results/ml_loss_context_line_plots/bbv_context.pdf}\hfill
+    \includegraphics[width=0.245\textwidth]{figures/quantitative_results/ml_loss_context_line_plots/db_context.pdf}\hfill
+    \includegraphics[width=0.245\textwidth]{figures/quantitative_results/ml_loss_context_line_plots/sd_context.pdf}\hfill
+    \includegraphics[width=0.245\textwidth]{figures/quantitative_results/ml_loss_context_line_plots/trampoline_v4_sim_context.pdf}
+    \caption{Full simulation rollout MSE across different baselines using 8 context trajectories.
+    PEACH consistently performs similarly to the mesh-based MaNGO, improving over other
+    point cloud-based baselines and achieving performance competitive with the Oracle models.}
+    \label{fig:context_mse}
+\end{figure}

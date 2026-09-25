@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pointpatch_encoder_mango_decoder_only_ml
+  - override /dataset: sd_v1
+  - override /algorithm/evaluator: test_evaluator
+  - override /loading: sd_loading
+
+loading:
+  root_path: output/checkpoints/sd/5902_sd_pointpatch_encoder_mango_decoder_only_ml
+
+
+exp_name: EVAL_59_sd_pointpatch_encoder_mango_decoder

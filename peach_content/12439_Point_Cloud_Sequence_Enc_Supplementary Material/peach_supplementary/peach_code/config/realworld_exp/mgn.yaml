@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: mgn
+  - _self_
+
+algorithm:
+  data_modalities: ['pc', 'mesh', 'sdf']
+model_checkpoints:
+  - checkpoints/trampoline_v4/5004d2_trampoline_v4_mgn/+ex_exp_v4=50_mgn,+pl=jsc_clusterduck/seed_1001/best-checkpoint-epoch=16-val_ml_loss=0.00107664.ckpt
+  - checkpoints/trampoline_v4/5004d2_trampoline_v4_mgn/+ex_exp_v4=50_mgn,+pl=jsc_clusterduck/seed_1002/best-checkpoint-epoch=03-val_ml_loss=0.00072134.ckpt
+  - checkpoints/trampoline_v4/5004d2_trampoline_v4_mgn/+ex_exp_v4=50_mgn,+pl=jsc_clusterduck/seed_1003/best-checkpoint-epoch=00-val_ml_loss=0.00091353.ckpt
+  - checkpoints/trampoline_v4/5004d2_trampoline_v4_mgn/+ex_exp_v4=50_mgn,+pl=jsc_clusterduck/seed_1004/best-checkpoint-epoch=01-val_ml_loss=0.00074685.ckpt
+#latex_ids: []  # leave blank for all
+#sphere_ids: []  # leave blank for all
+#traj_filter: []
+
+exp_name: 01_mgn
+

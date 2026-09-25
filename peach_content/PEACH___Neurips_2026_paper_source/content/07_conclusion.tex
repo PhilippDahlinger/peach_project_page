@@ -1,0 +1,29 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We present \glsf{peach}, an in-context framework that conditions a graph network simulator on a handful of point cloud sequences to predict mesh-based dynamics for unseen materials.
+% Relying only on point cloud contexts further allows \gls{peach} to simulate real-world scenes without requiring either explicit parameter estimation or any test-time optimization.
+By conditioning on point clouds instead of e.g., meshes, context data can be obtained easily from real world scenes.
+This allows \gls{peach} to simulate real-world scenes without explicit parameter estimation or test-time optimization, and we demonstrate zero-shot sim-to-real transfer on a challenging trampoline scene.
+% As such, it facilitates efficient test-time real-to-sim transfer, in turn enabling downstream tasks such as planning and control on deformable objects directly from raw sensor data.
+Across four simulated datasets, \gls{peach} outperforms all learned point cloud encoders and performs on par with the mesh-based \gls{mango}, while being about $140$ times faster than test-time optimization.
+% Our method combines a spatio-temporal encoder that treats context sequences as point clouds in 4D space-time with a trajectory-based learned simulator conditioned on the resulting encoded material parameters.
+Crucial to our method are our novel spatio-temporal encoder that treats context sequences as point clouds in 4D space-time, and auxiliary supervision in the form of direct parameter regression and prediction of \gls{sdf} values.
+
+\textbf{Limitations and future work.} 
+\gls{peach} assumes access to an initial scene geometry and requires context trajectories that share physical properties with the target process. 
+Generating an initial mesh from observation would relax the geometry assumption, while accumulating context online during, e.g., robot execution would handle material drift across a process.
+Additionally, \gls{peach} currently predicts the full trajectory in a single forward pass, which may impose memory constraints for long sequences and high-resolution meshes. 
+Predicting sparse keyframes and training a separate network to interpolate between them is a promising way to decouple memory cost from horizon length.
+Further extensions could include other sensor modalities such as temperature readings and touch sensors for more accurate parameter estimation.
+We discuss broader impact in Appendix~\ref{app:broader_impact}.
+
+
+
+% We introduced \glsf{peach}, an in-context learning framework that adapts graph network simulators to unseen material properties using only sequences of point cloud observations.
+% By decoupling material inference from mesh-based dynamics prediction, \gls{peach} extends prior mesh-dependent approaches to more realistic observation settings while retaining the efficiency and accuracy of trajectory-level graph network simulators.
+% Our experiments on simulated deformation environments demonstrate that \gls{peach} achieves performance on par with mesh-based context methods, despite relying on significantly sparser input data.
+
+% While this work takes an important step toward real-world adaptive simulation, all evaluations are conducted using simulated point clouds. Thus, real-world sensing effects such as noise, occlusions, and domain shift are not yet considered.
+% Furthermore, inference still relies on a canonical simulation mesh, and we do not explicitly study geometric mismatch between simulated and observed systems.
+

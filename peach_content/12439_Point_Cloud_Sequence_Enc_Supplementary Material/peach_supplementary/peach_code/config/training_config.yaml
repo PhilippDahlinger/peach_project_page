@@ -1,0 +1,44 @@
+# The base Hydra config
+
+defaults:
+  - dataset: ???
+  - algorithm: ???
+  - trainer: single_gpu_standard
+  - loading: no_loading
+  - override hydra/sweeper: list
+  - _self_
+
+exp_name: ???
+resume_from_checkpoint: False
+old_exp_folder: null
+
+
+wandb:
+  enabled: True  # whether to use the wandb logger or not
+  offline: False  # whether to log to wandb in offline mode. This is useful if you want to log to wandb but don't have internet access on the machine you're running on. It will save the logs locally and sync them to wandb when you have internet access again.
+  project_name: Peach  # name of the project
+  entity: ...  # name of the entity to log to. Will default to your private wandb account
+  group_name: ${exp_name}
+  run_name: seed_${seed}
+  job_type: ${sub_dir_shortener:${hydra:job.override_dirname}, 3, False}
+  dev: False  # whether to mark this run in wandb as development run
+  #  job_type: ${hydra:job.override_dirname}
+  # only used categorizing wandb projects
+  tags: null  # list of custom tags to sort/find these runs by
+  start_method: "thread"  # start method for wandb. "thread" is recommended for slurm and on your cluster.
+  # null will use the default wandb start method,
+  # which is "fork" on linux and "spawn" on windows (according to copilot)
+
+seed: 0
+
+hydra:
+  run:
+    dir: ./output/hydra/training/${now:%Y-%m-%d}/${exp_name}
+  sweep:
+    dir: ./output/hydra/training/${now:%Y-%m-%d}
+    subdir: ${exp_name}/${sub_dir_shortener:${hydra:job.override_dirname}, 3, False}/seed_${format:${seed}, '{:02d}'}
+  job:
+    config:
+      override_dirname:
+        exclude_keys:
+          - seed

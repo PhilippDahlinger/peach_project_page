@@ -1,0 +1,16 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pstnet_mango_decoder
+  - override /dataset: bbv_v3
+
+
+algorithm:
+  edge_loss_weight: 20
+  edge_loss_type: length   # length or vector
+
+wandb:
+  enabled: True
+
+exp_name: 0500_pstnet_encoder_debug
+

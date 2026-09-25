@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pstnet_mango_decoder
+  - override /dataset: trampoline_v4
+  - override /algorithm/evaluator: trampoline_sim_test_evaluator
+  - override /loading: trampoline_v4_loading
+
+loading:
+  root_path: checkpoints/trampoline_v4/5503_trampoline_v4_pstnet_mango_decoder
+
+
+exp_name: EVAL_55_trampoline_v4_pstnet_mango_decoder

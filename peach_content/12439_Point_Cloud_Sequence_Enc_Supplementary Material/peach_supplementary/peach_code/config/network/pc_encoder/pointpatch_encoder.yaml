@@ -1,0 +1,70 @@
+name: pointpatch_encoder
+_target_: src.pc_mango.network.pc_encoder.pointpatch_encoder.PointPatchEncoder
+
+# Final output dimension
+output_dim: 128
+
+patch_size: 16
+oversampling_ratio: 1.6
+fps_random_start: true
+time_scale: 16.0
+color_based_sampling: False
+color_based_collider_ratio: 0.5
+
+mlp_1:
+  _target_: src.pc_mango.network.util.mlp.MlpModel
+  _partial_: true
+  hidden_sizes: [128]
+  out_features: 256
+  activation: ReLU
+mlp_2:
+  _target_: src.pc_mango.network.util.mlp.MlpModel
+  _partial_: true
+  _args_: [512]  # in_features must be 2 * out_features of mlp_1  
+  hidden_sizes: [512]
+  activation: ReLU
+token_pos_encoder:
+  _target_: src.pc_mango.network.util.pointpatch_encoder.pos_encoder.PointMAECartesianPosEncoder
+  _partial_: True  # requires embed_dim
+  hidden_dim: 128
+pooling:
+  _target_: src.pc_mango.network.util.attention_pooling.AttentionPooling
+  _partial_: True
+  n_layers: 1
+  n_tokens: 1  # must be 1 for this project
+  norm:
+    _target_: torch.nn.RMSNorm
+    _partial_: True
+    eps: 1e-6
+  attention:
+    n_heads: 4
+    dropout: 0.3
+    is_causal: False
+    bias: False
+    qk_norm:
+      _target_: torch.nn.RMSNorm
+      _partial_: True
+      eps: 1e-6
+  residual_dropout: 0.1
+  mlp1:
+    _target_: torch.nn.Linear
+    _partial_: True
+  activation: ReLU
+  mlp_dropout: 0.1
+  mlp2:
+    _target_: torch.nn.Linear
+    _partial_: True
+    bias: False
+  norm_first: True
+patch_spatial_encoder:
+  _target_: src.pc_mango.network.util.fourier_features.FourierFeatures
+  _partial_: true
+  n_wavelengths: 8
+  max_wavelength: 2.0  # required for unique encoding of positions within [-1, 1]
+  min_wavelength: 0.01
+center_spatial_encoder:
+  _target_: src.pc_mango.network.util.fourier_features.FourierFeatures
+  _partial_: true
+  n_wavelengths: 8
+  max_wavelength: 2.0  # required for unique encoding of positions within [-1, 1]
+  min_wavelength: 0.01

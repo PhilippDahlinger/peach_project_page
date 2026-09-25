@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: trampoline_pointpatch_encoder_mango_decoder
+  - override /dataset: trampoline_v4
+
+wandb:
+  enabled: True
+
+resume_from_checkpoint: True
+old_exp_folder: "output/hydra/training/2026-04-24/5403_trampoline_v4_pointpatch_encoder_mango_decoder/+ex_exp_v4=54_pointpatch_encoder_mango_decoder,+pl=jsc_clusterduck"
+
+exp_name: 5403d2_trampoline_v4_pointpatch_encoder_mango_decoder
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

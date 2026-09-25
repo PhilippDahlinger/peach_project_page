@@ -1,0 +1,17 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: ggns_db
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_ggns_db_v4
+
+
+wandb:
+  enabled: True
+
+exp_name: 0501_db_ggns_noise_grid
+
+hydra:
+  sweeper:
+    grid_params:
+      algorithm.input_mesh_noise: 0.001, 0.002, 0.005, 0.01

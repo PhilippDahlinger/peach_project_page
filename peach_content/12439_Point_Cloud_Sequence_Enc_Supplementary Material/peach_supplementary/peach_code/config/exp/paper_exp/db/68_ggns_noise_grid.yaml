@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: ggns_db
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_ggns_db_v4
+
+
+wandb:
+  enabled: True
+
+
+dataset:
+  train_dataset:
+    dataset_size: 150 # main memory restriction
+
+exp_name: 6807_db_ggns_noise_grid
+
+seed: 1005
+hydra:
+  sweeper:
+    grid_params:
+      algorithm.input_mesh_noise: 0.001, 0.002, 0.005, 0.01

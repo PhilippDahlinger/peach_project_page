@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mango_decoder
+  - override /dataset: sd_v1
+
+wandb:
+  enabled: True
+
+exp_name: 5603d2_sd_oracle_mango_decoder
+
+resume_from_checkpoint: True
+old_exp_folder: "output/hydra/training/2026-04-24/5603_sd_oracle_mango_decoder/+ex_exp=56_oracle_mango_decoder,+pl=jsc_clusterduck"
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

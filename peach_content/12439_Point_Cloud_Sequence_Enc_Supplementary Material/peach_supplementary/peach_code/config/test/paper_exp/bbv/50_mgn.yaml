@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: mgn
+  - override /dataset: step_bbv_v3
+  - override /algorithm/evaluator: bbv_test_evaluator
+  - override /loading: bbv_loading
+
+loading:
+  root_path: checkpoints/bbv/5002_bbv_mgn
+
+
+exp_name: EVAL_50_trampoline_v4_mgn

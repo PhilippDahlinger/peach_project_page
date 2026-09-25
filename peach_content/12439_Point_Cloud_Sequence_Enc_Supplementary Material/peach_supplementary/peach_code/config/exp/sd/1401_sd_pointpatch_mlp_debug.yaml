@@ -1,0 +1,33 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pointpatch_encoder_mlp
+  - override /algorithm/optimizer: adamw
+  - override /algorithm/scheduler: standard
+  - override /dataset: sd_v1
+  - override /algorithm/meta_aggregation: softmax_pool
+#  - override /trainer: single_cpu_standard
+
+wandb:
+  enabled: True
+
+dataset:
+    split_type: ood
+    train_dataset:
+        dataset_size: 2  # artificially reduce dataset size for debugging
+        max_context_size: 1
+    eval_dataset:
+        dataset_size: 2  # artificially reduce dataset size for debugging
+        context_size: 1
+        target_size: 1
+
+algorithm:
+  optimizer:
+    lr: 0.0
+  mat_prop_loss_weight: 0.02
+
+exp_name: 1411_sd_pointpatch_mlp_2_tasks_debug
+
+
+
+

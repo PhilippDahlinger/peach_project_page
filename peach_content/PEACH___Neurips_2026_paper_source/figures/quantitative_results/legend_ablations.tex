@@ -1,0 +1,43 @@
+\begin{tikzpicture}
+    \tikzstyle{every node}=[font=\scriptsize]
+    \input{figures/quantitative_results/tikzcolors}
+
+    \begin{axis}[%
+        hide axis,
+        xmin=10,
+        xmax=50,
+        ymin=0,
+        ymax=0.1,
+        legend style={
+            draw=none,
+            legend cell align=left,
+            legend columns=3,
+            column sep=1ex,
+        }
+    ]
+
+    % --- Bar-style legend entries ---
+    \addlegendimage{area legend, fill=tabblue}
+    \addlegendentry{PEACH (ours, both aux. losses)}
+
+    \addlegendimage{area legend, fill=tabpurple}
+    \addlegendentry{PEACH (aux. material parameter loss only)}
+
+    \addlegendimage{area legend, fill=tabcyan}
+    \addlegendentry{PEACH (aux. SDF loss only)}
+
+    \addlegendimage{area legend, fill=taborange}
+    \addlegendentry{PEACH (no aux. loss)}
+
+    
+    \addlegendimage{area legend, fill=tabgreen}
+    \addlegendentry{Oracle}
+
+    
+    \addlegendimage{area legend, fill=tabgray}
+    \addlegendentry{No Context}
+
+
+
+    \end{axis}
+\end{tikzpicture}

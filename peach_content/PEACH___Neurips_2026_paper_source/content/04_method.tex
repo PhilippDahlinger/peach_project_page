@@ -1,0 +1,112 @@
+\section{Point Cloud Encoding for Accurate Context Handling}
+\label{sec:method}
+
+\textbf{Problem Setting.}
+We consider a family of physical systems that share the same governing equations but differ in their physical properties, such as stiffness, damping, or thickness.
+The goal is to learn a simulator that mimics a \gls{fem} solver and predicts a sequence of mesh states $\hat{\mathcal{G}}_{1:T}$ at discrete frames $1,\ldots,T$, without explicit knowledge of the physical properties $\rho$.
+
+This setup is common in industrial applications, where mesh-based representations are commonly available or can be obtained through established reconstruction pipelines.
+In our work, each \emph{task} corresponds to a fixed configuration of physical properties $\rho$, where the initial conditions such as mesh geometry or external forces may vary.
+For each initial condition, we generate a ground truth mesh trajectory using an \gls{fem} solver.
+By ray-tracing the mesh states with a virtual camera, we subsequently create an observed point cloud trajectory for each mesh trajectory.
+At inference, we wish to adapt our learned simulator to the given task, conditioned only on a small context of observed point cloud trajectories.
+% Instead, this information is inferred from a small context set of point cloud sequences.
+
+\textbf{Framework Overview.}
+During training, we sample a subset of $C$ point cloud trajectories from one task, where each trajectory $\mathcal{P}_i \in \mathbb{R}^{T \times N \times 3}$ consists of $T$ frames of $N$ points in 3D space.
+We encode each trajectory using a point cloud sequence encoder to obtain latent codes $\{\mathbf{r}_1, \dots, \mathbf{r}_C\}$, where each $\mathbf{r}_c$ is a $d_{\mathbf r}$-dimensional vector describing the physical properties from this trajectory in latent space.
+The per-sequence latent codes are further aggregated into a single task-level latent embedding $\mathbf{r}$ of the physical properties via a learned softmax aggregation, enabling the model to handle a variable number of context trajectories.
+Concretely, given per-sequence latent codes $\{\mathbf{r}_1, \dots, \mathbf{r}_C\}$, the aggregated embedding is computed as
+%
+\begin{equation}
+    \mathbf{r} = \sum_{c=1}^{C} \boldsymbol{\alpha}_c \odot \mathbf{r}_c, \quad \boldsymbol{\alpha}_c = \frac{\exp(\beta \mathbf{r}_c)}{\sum_{c'=1}^{C} \exp(\beta \mathbf{r}_{c'})},
+\end{equation}
+%
+where $\beta$ is a learnable inverse-temperature parameter and the softmax is applied element-wise across the context dimension.
+Together with an initial mesh state $\mathcal{G}_0$ sampled from the same task but independent of the context trajectories, $\mathbf{r}$ is passed to a differentiable mesh-based simulator to predict the remaining trajectory $\hat{\mathcal{G}}_{1:T}$, supervised against the ground truth $\mathcal{G}_{1:T}$.
+The simulator is realized as a \gls{gns}.
+Gradients are propagated end-to-end through both the simulator and the point cloud encoder, ensuring that the learned physical representation is optimized for predictive accuracy.
+
+At inference time, the material parameters $\rho$ are unknown and only the mesh state $\mathcal{G}_0$ of the initial configuration is available.
+The model must therefore rely entirely on the learned context encoding to estimate the material properties from a given sequence of context point clouds and simulate the resulting deformation.
+% Crucially, real-world point cloud observations can be used directly as context during inference, bridging the gap between simulation and physical deployment.
+As we show in our experiments, the model is capable of generalizing to unseen physical properties in simulation and even to real data.
+Note that no real-world data is used for training, as neither ground truth mesh trajectories nor the true physical properties $\rho$ are available. We next describe the graph network simulator used as the dynamics backbone of our framework.
+
+\textbf{Graph Network Simulators.}
+Unlike step-based simulators~\citep{pfaff2020learning, wurth2025diffusion}, which accumulate errors during rollout, trajectory-based simulators~\citep{dahlinger2025mango, dahlinger2025context, egno2024} predict the entire remaining trajectory in a single forward pass.
+% \textbf{Graph Network Simulators.}
+% \glspl{gns} generally follow one of two paradigms.
+% Step-based simulators~\citep{pfaff2020learning,wurth2025diffusion} iteratively predict the next mesh state from the current one, which introduces a train-to-test gap due to error accumulation during rollout.
+% Trajectory-based simulators~\citep{dahlinger2025mango, dahlinger2025context, egno2024} instead predict the entire remaining trajectory in a single forward pass, at the cost of higher memory requirements.
+%This perspective integrates naturally into our in-context learning setup, as the inferred latent material parameters condition the entire predicted trajectory.
+% \gls{peach} utilizes the trajectory-based \gls{mango} simulator~\citep{dahlinger2025mango} there conditioning on the entire predicted trajectory, which we briefly review here for completeness.
+\gls{peach} utilizes the trajectory-based \gls{mango} simulator~\citep{dahlinger2025mango}, which represents the full trajectory as a single static graph with temporally indexed node and edge features. Each layer interleaves spatial message passing within a time step with a 1D residual \gls{cnn} over time, and the latent material description is broadcast to all nodes and time steps, so that it conditions the entire predicted trajectory. The simulator is trained with per-timestep \gls{mse} losses over the full rollout (Appendix~\ref{app:mango}).
+
+% To condition the simulator on observed data, we require an encoder that maps point cloud trajectories into a compact representation of the underlying material properties.
+
+\input{figures/quantitative_results_main}
+
+\textbf{Spatio-Temporal Point Cloud Encoder.}
+The core challenge of the point cloud encoder is to compress a large number of spatially dense but informationally sparse points into a compact and expressive latent representation.
+Furthermore, there are numerous ways to treat a set of points across both space and time coordinates. 
+While typical point-patch style encoders~\citep{pointMAE, pointBERT, pointGPT} are effective for tokenizing individual point clouds, material properties reveal themselves most clearly in the dynamics of the scene rather than in any single time step.
+Therefore, we adapt this paradigm to point cloud sequences and develop a novel encoder architecture by considering points in 4D space-time.
+
+Space-time coordinates are computed by normalizing the sequence duration and applying a scaling factor of $\tau$.
+Setting $\tau {\rightarrow} 0$ has the effect of ignoring the time axis, while $\tau {\rightarrow} \infty$ recovers the case where each time step is encoded independently of all others.
+We sample $M$ patch centers using \gls{fps}~\citep{ruizhongtai2017pointnet} and extract patches using \gls{knn}, both over space-time coordinates.
+We compute the features of each point using a Fourier feature projection~\citep{tancik2020fourier, gyenes2026fourier} of its space-time coordinates \mbox{$\gamma:\mathbb{R}\to\mathbb{R}^{2L}$} with $\gamma_k(x) = [\sin(2\pi x / \lambda_k), \cos(2\pi x / \lambda_k)]^\top$ for $k = 1, \dots, L$, where $L$ is the number of frequency bands and the wavelengths $\lambda_k = \lambda_\text{max} (\lambda_\text{min} / \lambda_\text{max})^{(k-1)/(L-1)}$ are spaced geometrically between $\lambda_\text{max}$ and $\lambda_\text{min}$.
+The Fourier-encoded point features are concatenated with an additional object type feature, describing the object to which each point belongs.
+We use the PointMAE tokenizer~\citep{pointMAE} to get a patch embedding $\mathbf{s} \in \mathbb{R}^{d}$ from the point features of each patch, which is similar to PointNet~\citep{ruizhongtai2017pointnet} and uses max-pooling to aggregate over the patch.
+The point features of the patch center are passed through another \gls{mlp} to yield a patch positional embedding $\mathbf{c} \in \mathbb{R}^{d}$, which is added to the patch embeddings to obtain tokens $\mathbf{t} = \mathbf{s} + \mathbf{c}$.
+
+% Space-time coordinates are computed by normalizing the sequence duration and applying a scaling factor of $\tau$.
+% Setting $\tau {\rightarrow} 0$ has the effect of ignoring the time axis, while $\tau {\rightarrow} \infty$ recovers the case where each time step is encoded independently of all others.
+% We sample $M$ patch centers using \gls{fps}~\citep{ruizhongtai2017pointnet} and extract patches using \gls{knn}, both over space-time coordinates.
+% We compute the features of each point using a Fourier feature projection~\citep{tancik2020fourier, gyenes2026fourier} of its space-time coordinates \mbox{$\gamma:\mathbb{R}\to\mathbb{R}^{2L}$} given by
+% \begin{equation*}
+%     \gamma_k(x) = \biggl[ \sin \Bigl( \frac{2 \pi x}{\lambda_k } \Bigr), \, \cos \Bigl( \frac{2 \pi x}{\lambda_k} \Bigr) \biggr]^\textbf{T},
+%     \quad
+%     \lambda_k = \lambda_\text{max} \left( \frac{\lambda_\text{min}}{\lambda_\text{max}} \right)^{\tfrac{k-1}{L-1}},
+%     \quad
+%     k = 1, \dots, L
+%     \text{,}
+%     \label{eq:ff_scalar}
+% \end{equation*}
+% where $L$ is the number of frequency bands.
+% The Fourier-encoded point features are concatenated with an additional object type feature, describing the object to which each point belongs.
+% We use the PointMAE tokenizer~\citep{pointMAE} to get a patch embedding $\mathbf{s} \in \mathbb{R}^{d}$ from the point features of each patch, which is similar to PointNet \citep{ruizhongtai2017pointnet} and uses max-pooling to aggregate over the patch.
+% The point features of the patch center are passed through another \gls{mlp} to yield a patch positional embedding $\mathbf{c} \in \mathbb{R}^{d}$, which is then added to the patch embeddings to produce  the patch tokens $\mathbf{t} = \mathbf{s} + \mathbf{c}$.
+
+
+The $M$ tokens $\{\mathbf{t}_1, \dots, \mathbf{t}_M\}$ are passed into a transformer encoder, which refines them via self-attention.
+A final attention pooling layer compresses them into a single output token $\mathbf{r}_i$ for the point cloud sequence $\mathcal {P}_i$.
+In contrast to simple mean or max pooling, the attention pooling layer uses a learned query token to attend over the transformer outputs, allowing the model to selectively focus on the most informative spatio-temporal regions.
+We found that a lightweight architecture with a single transformer layer suffices and outperforms deeper variants, suggesting that the tokenizer already captures most of the relevant structure and only light global reasoning is needed on top.
+
+\textbf{Auxiliary Losses.}
+To encourage the latent representation to capture physically meaningful material properties and stabilize training, we introduce two auxiliary training objectives.
+As in \gls{mango}, we supervise the trajectory-level latent material description $\mathbf{r}$ using ground-truth physical properties through a lightweight decoder $\hat{\rho} = \mathrm{MLP}(\mathbf{r})$.
+The predicted $\hat{\rho}$ can be interpreted as an explicit system identification of the current task.
+
+We additionally supervise the patch tokenizer using an \gls{sdf} objective inspired by~\citet{vosylius2024instantpolicyincontextimitation}. 
+An \gls{sdf} \mbox{$f: \mathbb{R}^3 \to \mathbb{R}$} assigns to each point $\mathbf p$ its signed distance to the nearest mesh surface, with positive values outside and negative values inside. For 2D sheet-like geometries we treat the underside as interior. 
+The distances are scaled and passed through a $\tanh$ nonlinearity to obtain normalized targets $s = \tanh(\alpha\, f(\mathbf p))$, which act similarly to truncation~\citep{curless1996volumetric} and smoothly approach an occupancy function~\citep{mescheder2019occupancy} as $\alpha{\rightarrow}\infty$. 
+For each trajectory and time step, we sample query points %such that two thirds lie near object surfaces and the rest are drawn uniformly from the scene's bounding box, 
+as visualized in the bottom right of Figure~\ref{fig:overview}. 
+For each query point, we find its $K_{\text{SDF}}$ nearest patch tokens in 4D space-time and Fourier-encode their relative positions. 
+These encodings are concatenated with the token embeddings and processed by an attention-based MLP that predicts a scalar weight per neighbor, biased by the normalized distance to emphasize spatio-temporal locality. 
+A weighted aggregation of the features is decoded by a small MLP into a predicted signed distance, which is supervised against the ground-truth $s$ using a smooth $\ell_1$ loss.
+
+\textbf{Data Augmentation.}
+To bridge the gap between simulated training data and real-world sensor inputs, we perturb simulated point cloud sequences during training to mimic typical artifacts observed in real-world data.
+These augmentations include multi-scale Gaussian noise to model sensor uncertainty and structured region dropout~\citep{cutout} to simulate occlusions or missing observations. 
+To account for sensor failures and reconstruction errors, we additionally inject sporadic point artifacts by sampling a small number of points uniformly from the scene's bounding box.
+
+% \textbf{Data Augmentation.}
+% To bridge the gap between simulated training data and real-world sensor inputs, we improve the robustness of the point cloud encoder via data augmentation. 
+% In particular, we perturb simulated point cloud sequences during training to mimic typical artifacts observed in real-world data. 
+% These augmentations include multi-scale Gaussian noise to model sensor uncertainty and structured region dropout~\citep{cutout} to simulate occlusions or missing observations. 
+% To account for sensor failures and reconstruction errors, we additionally inject sporadic point artifacts by sampling a small number of points uniformly from the scene's bounding box.
+% These augmentations enable generalization to noisy and incomplete point cloud observations, facilitating reliable material inference and simulation in real-world scenarios.

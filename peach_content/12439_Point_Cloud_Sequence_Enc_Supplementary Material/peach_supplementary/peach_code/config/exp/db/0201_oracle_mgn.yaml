@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mgn
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_db_v4
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 0201_db_oracle_mgn
+
+

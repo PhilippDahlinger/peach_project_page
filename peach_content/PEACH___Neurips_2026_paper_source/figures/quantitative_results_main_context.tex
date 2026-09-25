@@ -1,0 +1,15 @@
+\begin{figure}[t]
+    \centering
+    \makebox[\textwidth][c]{
+    \input{figures/quantitative_results/legend}
+    }
+    \includegraphics[width=0.24\textwidth]{figures/quantitative_results/db/db_ml_loss.pdf}
+    \includegraphics[width=0.24\textwidth]{figures/quantitative_results/db/db_mat_prop_loss.pdf}
+    \includegraphics[width=0.24\textwidth]{figures/quantitative_results/sd/sd_ml_loss.pdf}
+    \includegraphics[width=0.24\textwidth]{figures/quantitative_results/sd/sd_mat_prop_loss.pdf}
+    \caption{
+    Full simulation rollout and material property \gls{mse} across different encoder architectures as a function of the number of context sequences for (\textbf{left}) \texttt{Deforming Block} and (\textbf{right}) \texttt{Sheet Deformation}.
+    \gls{peach} consistently performs similar to the mesh-based \gls{mango}, improving over other point cloud encoders and achieving near-Oracle performance on \texttt{Deforming Block}.
+    }
+    \label{fig:quantitative_comparison}
+\end{figure}

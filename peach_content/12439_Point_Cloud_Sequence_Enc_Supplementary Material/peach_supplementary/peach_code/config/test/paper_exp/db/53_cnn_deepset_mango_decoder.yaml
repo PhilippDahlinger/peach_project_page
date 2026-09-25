@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: cnn_deepset_mango_decoder
+  - override /dataset: db_v4
+  - override /algorithm/evaluator: test_evaluator
+  - override /loading: db_loading
+
+loading:
+  root_path: checkpoints/db/5301_db_cnn_deepset_mango_decoder
+
+
+exp_name: EVAL_53_db_cnn_deepset_mango_decoder

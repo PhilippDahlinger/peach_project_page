@@ -1,0 +1,6 @@
+name: cnn_deepset
+latent_dimension: 128
+output_dim: 128
+centralize_input: False
+z_pos_feature: False
+dataset_name: ${dataset.wandb_name}

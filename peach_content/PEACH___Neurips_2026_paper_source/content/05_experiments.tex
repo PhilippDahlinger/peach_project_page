@@ -1,0 +1,48 @@
+\section{Experiments and Results}
+\label{sec:experiments}
+
+\input{figures/real_world_results}
+\textbf{Scenes.}
+We evaluate the sim-to-real capability of \gls{peach} on a novel scene called \texttt{Trampoline} that involves dynamic motion, complex contact interactions, and deformable objects.
+Additionally, we introduce the novel simulation-only dataset \texttt{Bending Beam} inspired by \citet{wurth2025diffusion}, and adopt two existing datasets, \texttt{Deforming Block} and \texttt{Sheet Deformation}~\citep{dahlinger2025mango}\footnote{Called \texttt{Deformable Plate} (\textit{easy}) and \texttt{Planar Bending}, respectively, in \citet{dahlinger2025mango}.}.
+These scenes span 2D and 3D domains, and are inspired by simulation-assisted process optimization in industrial contexts.
+They feature varying physical parameters such as Young's modulus (all except \texttt{Deforming Block}), Poisson's ratio (all except \texttt{Sheet Deformation}), membrane thickness, shear relaxation ratio (\texttt{Trampoline}), and relaxation time (\texttt{Bending Beam} and \texttt{Trampoline}).
+Rollout length varies by scene from $25$ (\texttt{Trampoline}) to $100$ (\texttt{Bending Beam}).
+Although the \texttt{Trampoline} scene has a shorter horizon, it has the most complex geometry, with roughly $10$ times more triangles than other scenes.
+A visual overview of the scenes is provided in Figure~\ref{fig:task_overview}, with further details in Appendix~\ref{app:dataset}.
+
+In simulation, we obtain per-step point clouds by ray casting from a static camera and applying \gls{fps}~\citep{ruizhongtai2017pointnet} to retain $512$ points; due to the finer geometry \texttt{Trampoline} uses $1024$ points.
+To reduce the point cloud sequence length, we drop every $2$nd time step. 
+In \texttt{Trampoline} and \texttt{Deforming Block}, collider points are explicitly marked.
+For the real world \texttt{Trampoline} dataset, we use a robot to drop balls of varying density onto latex sheets of different thicknesses and record depth images with a ZED Mini Stereo Camera (Stereolabs).
+Neither meshes nor ground truth physical parameters are known for these recordings.
+For the ``\textit{Oracle}'' baseline, measurable material properties are determined experimentally  while the remaining parameters are chosen based on informed estimates from literature values.
+Appendix~\ref{app:real} details the real-world data.
+
+\textbf{Baselines.}
+We compare \gls{peach} against methods using $4$ different context types, namely point cloud contexts, mesh contexts, oracle, and no context.
+\textit{Oracle} methods receive the ground truth physical properties at every time step as additional node features.
+\textit{No Context} methods predict trajectories solely from the initial state without additional task information.
+Methods using point cloud contexts infer the task from the same context point cloud sequences as \gls{peach}.
+\textit{PSTNet Encoder}~\citep{fan2021pstnet} and \textit{GNN Encoder} differ from \gls{peach} only in the encoder architecture.
+\textit{PSTNet Encoder} captures local geometric evolution via space-time tubes anchored at \gls{fps}-sampled reference points, applying decoupled spatial and temporal convolutions hierarchically across the point cloud sequence.
+\textit{GNN Encoder} adapts the graph network paradigm from mesh-based simulation to point cloud sequences.
+It tokenizes each timestep's point cloud into local patch embeddings, constructs a spatio-temporal graph connecting tokens within and across adjacent frames, and processes it via message passing with a final readout into a trajectory-level latent code.
+\textit{Test-Time Optimization} instead follows the classical system identification paradigm.
+Starting from the mean training parameters, it optimizes the physical parameters of the trained \textit{Oracle} model by gradient descent through the simulator, minimizing the distance between the observed context point clouds and the predicted meshes.
+
+\gls{mango}~\citep{dahlinger2025mango} instead computes the latent embedding using privileged mesh contexts.
+Since such contexts are not readily available in real-world settings, \gls{mango} is not directly comparable to our method, but demonstrates the impact of replacing explicit mesh observations with point clouds in simulated tasks.
+All baselines that predict a latent embedding also receive auxiliary supervision via ground truth physical properties.
+
+Lastly, we study the impact of the simulator component by replacing the MaNGO simulator with the \gls{mgn} simulator~\citep{pfaff2020learning}, a mesh-based autoregressive simulator trained for one-step prediction.
+We instantiate the \gls{mgn} baseline in \textit{Oracle (\gls{mgn})} and \textit{No Context (\gls{mgn})} variants.
+While it is possible to integrate \gls{mgn} into the \gls{peach} framework, early experiments indicated that it was outperformed by the MaNGO simulator.
+Appendix~\ref{app:methods} details all baselines.
+
+\textbf{Training.}
+We train each method end-to-end.
+All in-context methods are trained using batches of $1$ to $8$ randomly sampled context trajectories to improve adaptation capability.
+We repeat each experiment across $4$ random seeds using the AdamW optimizer~\citep{adamw} with a learning rate of $5.0{\times}10^{-5}$.
+All methods were trained on either an A100 or H100 GPU for $2$ days, with the exception of \texttt{Bending Beam}, which converged after $1$ day.
+Appendix~\ref{app:hp} lists hyperparameters, and Appendix~\ref{sec:runtime} provides parameter counts, inference runtimes, and an analysis of how the encoding time scales with context size, point count, and trajectory length.

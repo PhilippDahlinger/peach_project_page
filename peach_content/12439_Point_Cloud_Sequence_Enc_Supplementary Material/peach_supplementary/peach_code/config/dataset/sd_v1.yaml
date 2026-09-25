@@ -1,0 +1,51 @@
+name: sd
+wandb_name: sd
+root: ../datasets/pc_mango/sd_v1.hdf5
+external_sdf_root: ../datasets/pc_mango/sd_v1_sdf.hdf5
+
+z_pos_feature: False
+
+split_type: standard  # options: standard, small_data, ood
+
+pc_preprocessing:
+  output_type: tensor  # options: tensor, graph
+  temporal_stride: 2
+  num_subsample_points: 512  # null means no subsampling
+
+sdf_preprocessing:
+  temporal_stride: ${dataset.pc_preprocessing.temporal_stride}
+  num_query_points_per_ts: 50
+  scale_factor: 20.0 # targets become tanh(sdf / scale_factor)
+
+
+train_dataset:
+  root: ${dataset.root}
+  external_sdf_root: ${dataset.external_sdf_root}
+  batch_size: 1
+  initial_vel: zero  # choose between zero and constant
+  dataset_size: null  # artificially reduce dataset size for debugging
+  random_traj_selection: True
+  min_context_size: 1
+  max_context_size: 8
+  min_target_size: 1
+  max_target_size: 1
+  material_properties: ${algorithm.material_properties}
+  data_modalities: ${algorithm.data_modalities}
+  split_type: ${dataset.split_type}
+  pc_preprocessing: ${dataset.pc_preprocessing}
+  sdf_preprocessing: ${dataset.sdf_preprocessing}
+
+
+eval_dataset:
+  root: ${dataset.root}
+  external_sdf_root: ${dataset.external_sdf_root}
+  initial_vel: ${..train_dataset.initial_vel}
+  dataset_size: null # artificially reduce dataset size for debugging
+  random_traj_selection: False
+  context_size: 4  # deterministic
+  target_size: 16
+  material_properties: ${..train_dataset.material_properties}
+  data_modalities: ${..train_dataset.data_modalities}
+  split_type: ${dataset.split_type}
+  pc_preprocessing: ${..train_dataset.pc_preprocessing}
+  sdf_preprocessing: ${..train_dataset.sdf_preprocessing}

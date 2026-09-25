@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: dummy_mango_decoder
+  - override /dataset: db_v4_ood
+
+
+
+wandb:
+  enabled: True
+
+exp_name: 5204_db_ood_dummy_mango_decoder
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

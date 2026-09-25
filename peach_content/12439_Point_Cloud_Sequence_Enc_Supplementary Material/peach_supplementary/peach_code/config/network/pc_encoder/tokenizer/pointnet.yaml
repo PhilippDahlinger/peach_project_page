@@ -1,0 +1,16 @@
+name: pointnet
+
+# MLP dimensions for the tokenizer
+mlp_1_dims: [4, 32, 64]  # Input -> hidden layers (3 spatial + 1 color dim)
+mlp_2_dims: [128, 64, 32]  # Hidden -> output (note: first dim must be 2x last dim of mlp_1)
+
+# Grouping parameters
+group_size: 16  # Number of points per neighborhood
+sampling_ratio: 0.1  # Fraction of points to use as centers (via FPS)
+
+# Token embedding dimension (output of tokenizer per token)
+embed_dim: 32
+
+# Other settings
+random_start: true  # Random start for FPS
+padding_value: 0.0

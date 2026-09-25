@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: mgn
+  - override /dataset: step_trampoline_v4
+
+
+wandb:
+  enabled: True
+
+resume_from_checkpoint: True
+old_exp_folder: "output/hydra/training/2026-04-24/5004_trampoline_v4_mgn/+ex_exp_v4=50_mgn,+pl=jsc_clusterduck"
+
+exp_name: 5004d2_trampoline_v4_mgn
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

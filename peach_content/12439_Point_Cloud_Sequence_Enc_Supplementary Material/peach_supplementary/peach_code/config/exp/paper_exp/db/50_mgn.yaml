@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: mgn
+  - override /dataset: step_db_v4
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 5001_db_mgn
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

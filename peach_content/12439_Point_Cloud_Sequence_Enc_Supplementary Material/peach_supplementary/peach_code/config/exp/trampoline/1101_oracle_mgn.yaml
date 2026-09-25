@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mgn
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_trampoline_v4
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 1106_trampoline_oracle_mgn
+
+

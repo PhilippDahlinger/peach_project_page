@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: trampoline_pointpatch_encoder_mango_decoder
+  - _self_
+
+algorithm:
+  data_modalities: ['pc', 'mesh', 'sdf']
+model_checkpoints:
+  - checkpoints/trampoline_v4/2004d2_trampoline_v4_peach_realworld/+ex=2001_trampoline_v4_peach_realworld,+pl=jsc_clusterduck/seed_1001/best-checkpoint-epoch=466-val_ml_loss=0.00001033.ckpt
+#  - checkpoints/trampoline_v4/2004d2_trampoline_v4_peach_realworld/+ex=2001_trampoline_v4_peach_realworld,+pl=jsc_clusterduck/seed_1002/best-checkpoint-epoch=446-val_ml_loss=0.00001193.ckpt
+#  - checkpoints/trampoline_v4/2004d2_trampoline_v4_peach_realworld/+ex=2001_trampoline_v4_peach_realworld,+pl=jsc_clusterduck/seed_1003/best-checkpoint-epoch=462-val_ml_loss=0.00001331.ckpt
+#  - checkpoints/trampoline_v4/2004d2_trampoline_v4_peach_realworld/+ex=2001_trampoline_v4_peach_realworld,+pl=jsc_clusterduck/seed_1004/best-checkpoint-epoch=451-val_ml_loss=0.00001281.ckpt
+latex_ids: [5]  # leave blank for all
+sphere_ids: [3]  # leave blank for all
+traj_filter: [1, 2, 3]
+
+exp_name: 02_peach_vis
+

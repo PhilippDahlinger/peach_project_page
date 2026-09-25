@@ -1,0 +1,22 @@
+
+defaults:
+  - /network/pc_encoder/tokenizer@tokenizer: instant_policy_from_scratch
+  - /network/occupancy_network@occupancy_network: instant_policy_occupancy
+  - evaluator: base_evaluator
+  - optimizer: adamw
+  - scheduler: standard
+
+
+evaluator:
+  task_ids_to_visualize: [0, 1, 2, 3]
+
+type: pc_to_occupancy
+one_step_training: False  # Flag to check training loop to handle one step training (MGN and GGNS)
+check_val_every_n_epoch: ${trainer.check_val_every_n_epoch}
+checkpoint_metric: val_loss
+
+material_properties: False # not relevant here
+# dataset related configs
+data_modalities: ['pc', 'occupancy']
+pc_preprocessing: ${dataset.pc_preprocessing}
+

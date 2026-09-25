@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mgn
+  - override /dataset: step_sd_v1
+  - override /algorithm/evaluator: test_evaluator
+  - override /loading: sd_loading
+
+loading:
+  root_path: checkpoints/sd/5101_sd_oracle_mgn
+
+exp_name: EVAL_51_sd_oracle_mgn

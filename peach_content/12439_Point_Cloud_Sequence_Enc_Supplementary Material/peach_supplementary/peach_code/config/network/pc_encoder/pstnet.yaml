@@ -1,0 +1,5 @@
+name: pstnet
+
+radius: 0.1
+nsamples: 9
+output_dim: 128

@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pstnet_mlp
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4
+  - override /algorithm/meta_aggregation: softmax_pool
+#  - override /trainer: single_cpu_standard
+
+wandb:
+  enabled: True
+
+dataset:
+    train_dataset:
+        dataset_size: 2  # artificially reduce dataset size for debugging
+        max_context_size: 1
+    eval_dataset:
+        dataset_size: 2  # artificially reduce dataset size for debugging
+        context_size: 1
+        target_size: 1
+
+exp_name: 1417_trampoline_pstnet_mlp_2_tasks_debug_fixed
+
+
+
+

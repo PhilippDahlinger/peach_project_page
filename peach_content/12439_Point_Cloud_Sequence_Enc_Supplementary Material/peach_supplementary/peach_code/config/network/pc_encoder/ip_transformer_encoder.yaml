@@ -1,0 +1,53 @@
+
+defaults:
+  - tokenizer: instant_policy_pretrained
+
+name: ip_transformer_encoder
+
+# Final output dimension
+output_dim: 128
+
+frozen_tokenizer: True  # whether to freeze the tokenizer weights during training
+
+center_spatial_encoder:
+  _target_: src.pc_mango.network.util.fourier_features.FourierFeatures
+  _partial_: true
+  n_wavelengths: 8
+  max_wavelength: 2.0  # required for unique encoding of positions within [-1, 1]
+  min_wavelength: 0.01
+
+token_pos_encoder:
+  _target_: src.pc_mango.network.util.pointpatch_encoder.pos_encoder.PointMAECartesianPosEncoder
+  _partial_: True  # requires embed_dim
+  hidden_dim: 128
+
+# transformer encoder config
+transformer:
+  _target_: src.pc_mango.network.util.attention_pooling.AttentionPooling
+  _partial_: True
+  n_layers: 1
+  n_tokens: 1  # must be 1 for this project
+  norm:
+    _target_: torch.nn.RMSNorm
+    _partial_: True
+    eps: 1e-6
+  attention:
+    n_heads: 4
+    dropout: 0.3
+    is_causal: False
+    bias: False
+    qk_norm:
+      _target_: torch.nn.RMSNorm
+      _partial_: True
+      eps: 1e-6
+  residual_dropout: 0.1
+  mlp1:
+    _target_: torch.nn.Linear
+    _partial_: True
+  activation: ReLU
+  mlp_dropout: 0.1
+  mlp2:
+    _target_: torch.nn.Linear
+    _partial_: True
+    bias: False
+  norm_first: True

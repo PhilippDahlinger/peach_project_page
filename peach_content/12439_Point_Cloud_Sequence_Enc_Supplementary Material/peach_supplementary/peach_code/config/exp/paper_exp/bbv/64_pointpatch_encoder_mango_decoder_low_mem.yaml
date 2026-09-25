@@ -1,0 +1,27 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pointpatch_encoder_mango_decoder
+  - override /dataset: bbv_v3
+
+wandb:
+  enabled: True
+
+algorithm:
+  edge_loss_weight: 20
+  edge_loss_type: length
+  simulator:
+    latent_dimension: 100
+
+dataset:
+  pc_preprocessing:
+    temporal_stride: 3
+
+exp_name: 6401_bbv_pointpatch_encoder_mango_decoder_low_mem
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

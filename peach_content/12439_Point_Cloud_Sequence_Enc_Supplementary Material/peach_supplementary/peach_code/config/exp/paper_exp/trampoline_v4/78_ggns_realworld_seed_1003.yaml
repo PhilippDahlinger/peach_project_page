@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: ggns_trampoline
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_ggns_trampoline_v4_realworld
+
+
+wandb:
+  enabled: True
+
+algorithm:
+  input_mesh_noise: 0.002
+
+exp_name: 7802_trampoline_v4_ggns_realworld_seed_1003
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1003
+#      seed: 1003, 1004

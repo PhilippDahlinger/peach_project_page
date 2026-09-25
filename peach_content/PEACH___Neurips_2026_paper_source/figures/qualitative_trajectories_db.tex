@@ -1,0 +1,133 @@
+% =============================================================
+%  DEFORMING BLOCK  –  Single figure (all methods)
+% =============================================================
+\begin{figure*}[p]
+    \centering
+    {\Large \textbf{Deforming Block}}\\[1em]
+    \vfill
+
+    % helper macros (adjust trim once here)
+    \newcommand{\rowlabel}[1]{%
+        \begin{minipage}[c]{0.05\textwidth}\centering\rotatebox{90}{\scriptsize\textbf{\shortstack{#1}}}\end{minipage}%
+    }
+    \newcommand{\img}[1]{%
+        \includegraphics[width=0.158\textwidth, trim=9cm 2cm 9cm 2cm, clip, valign=m]{#1}%
+    }
+    \newcommand{\pointcloud}[1]{%
+        \includegraphics[width=\textwidth, trim=10cm 4cm 10cm 4cm, clip, valign=m]{#1}%
+    }
+
+    % Row 1: PEACH
+    \rowlabel{PEACH}%
+    \img{figures/qualitative_trajectories_db/PEACH/frame_0000.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PEACH/frame_0006.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PEACH/frame_0015.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PEACH/frame_0021.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PEACH/frame_0032.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PEACH/frame_0051.png}\\[0.4em]
+
+    % Row 2: No Context
+    \rowlabel{No Context}%
+    \img{figures/qualitative_trajectories_db/MANGO_Dummy_Dec_No_Context/frame_0000.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Dummy_Dec_No_Context/frame_0006.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Dummy_Dec_No_Context/frame_0015.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Dummy_Dec_No_Context/frame_0021.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Dummy_Dec_No_Context/frame_0032.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Dummy_Dec_No_Context/frame_0051.png}\\[0.4em]
+
+    % Row 3: MANGO Decoder
+    \rowlabel{MANGO}%
+    \img{figures/qualitative_trajectories_db/MANGO_Decoder/frame_0000.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Decoder/frame_0006.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Decoder/frame_0015.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Decoder/frame_0021.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Decoder/frame_0032.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Decoder/frame_0051.png}\\[0.4em]
+
+    % Row 4: MANGO Oracle
+    \rowlabel{Oracle}%
+    \img{figures/qualitative_trajectories_db/MANGO_Oracle/frame_0000.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Oracle/frame_0006.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Oracle/frame_0015.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Oracle/frame_0021.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Oracle/frame_0032.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MANGO_Oracle/frame_0051.png}\\[0.4em]
+
+    % Row 5: MGN
+    \rowlabel{No Context \\ (MGN)}%
+    \img{figures/qualitative_trajectories_db/MGN/frame_0000.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN/frame_0006.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN/frame_0015.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN/frame_0021.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN/frame_0032.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN/frame_0051.png}\\[0.4em]
+
+    % Row 6: MGN Oracle
+    \rowlabel{Oracle \\ (MGN)}%
+    \img{figures/qualitative_trajectories_db/MGN_Oracle/frame_0000.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN_Oracle/frame_0006.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN_Oracle/frame_0015.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN_Oracle/frame_0021.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN_Oracle/frame_0032.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/MGN_Oracle/frame_0051.png}\\[0.4em]
+
+    % Row 7: GNN Encoder
+    \rowlabel{GNN \\ Encoder}%
+    \img{figures/qualitative_trajectories_db/GNN_Encoder/frame_0000.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/GNN_Encoder/frame_0006.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/GNN_Encoder/frame_0015.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/GNN_Encoder/frame_0021.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/GNN_Encoder/frame_0032.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/GNN_Encoder/frame_0051.png}\\[0.4em]
+
+    % Row 8: PSTNet Encoder
+    \rowlabel{PSTNet \\ Encoder}%
+    \img{figures/qualitative_trajectories_db/PSTNET_Encoder/frame_0000.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PSTNET_Encoder/frame_0006.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PSTNET_Encoder/frame_0015.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PSTNET_Encoder/frame_0021.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PSTNET_Encoder/frame_0032.png}\hspace{-1pt}%
+    \img{figures/qualitative_trajectories_db/PSTNET_Encoder/frame_0051.png}\\[0.4em]
+
+    % Row 9: Pointcloud (special crop + labels)
+    \rowlabel{Pointcloud}%
+    \begin{minipage}[c]{0.158\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_db/PC_traj_15/frame_0000.png}\\[2pt]
+        \footnotesize$t{=}0$
+    \end{minipage}%
+    \begin{minipage}[c]{0.158\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_db/PC_traj_15/frame_0006.png}\\[2pt]
+        \footnotesize$t{=}6$
+    \end{minipage}%
+    \begin{minipage}[c]{0.158\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_db/PC_traj_15/frame_0015.png}\\[2pt]
+        \footnotesize$t{=}15$
+    \end{minipage}%
+    \begin{minipage}[c]{0.158\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_db/PC_traj_15/frame_0021.png}\\[2pt]
+        \footnotesize$t{=}21$
+    \end{minipage}%
+    \begin{minipage}[c]{0.158\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_db/PC_traj_15/frame_0032.png}\\[2pt]
+        \footnotesize$t{=}32$
+    \end{minipage}%
+    \begin{minipage}[c]{0.158\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_db/PC_traj_15/frame_0051.png}\\[2pt]
+        \footnotesize$t{=}51$
+    \end{minipage}
+
+    \par\vfill
+    \caption{
+Predicted simulation of a \texttt{Deforming Block} test task by
+\textcolor{TabBlue}{PEACH} (blue),
+\textcolor{TabGray}{No Context} (gray),
+\textcolor{TabCyan}{MANGO} (cyan),
+\textcolor{TabGreen}{Oracle} (green),
+\textcolor{TabOrange}{No Context (MGN)} (orange),
+\textcolor{TabPurple}{Oracle (MGN)} (purple),
+\textcolor{TabBrown}{GNN Encoder} (brown), and
+\textcolor{TabPink}{PSTNet Encoder} (pink).
+All visualizations show the colored \textbf{predicted mesh}, a \textbf{\textcolor{darkgray}{collider}}, and a \textbf{\textcolor{red}{wireframe}} (red) of the ground-truth simulation. The last row shows an exemplary point cloud sequence from the context set.
+    }
+    \label{fig:qualitative_trajectories_db}
+\end{figure*}

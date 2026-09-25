@@ -1,0 +1,137 @@
+\documentclass{article}
+
+\usepackage{silence}
+\WarningFilter{latex}{Command \showhyphens has changed}
+
+% if you need to pass options to natbib, use, e.g.:
+     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2026
+
+% The authors should use one of these tracks.
+% Before accepting by the NeurIPS conference, select one of the options below.
+% 0. "default" for submission
+\usepackage[main, final]{neurips_2026}
+% the "default" option is equal to the "main" option, which is used for the Main Track with double-blind reviewing.
+% 1. "main" option is used for the Main Track
+%  \usepackage[main]{neurips_2026}
+% 2. "position" option is used for the Position Paper Track
+%  \usepackage[position]{neurips_2026}
+% 3. "eandd" option is used for the Evaluations & Datasets Track
+ % \usepackage[eandd]{neurips_2026}
+ % if you want to opt-in for a de-anomymized submission (not recommended, but OK):
+ %\usepackage[eandd, nonanonymous]{neurips_2026}
+% 4. "creativeai" option is used for the Creative AI Track
+%  \usepackage[creativeai]{neurips_2026}
+% 5. "sglblindworkshop" option is used for the Workshop with single-blind reviewing
+ % \usepackage[sglblindworkshop]{neurips_2026}
+% 6. "dblblindworkshop" option is used for the Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop]{neurips_2026}
+
+% After being accepted, the authors should add "final" behind the track to compile a camera-ready version.
+% 1. Main Track
+ % \usepackage[main, final]{neurips_2026}
+% 2. Position Paper Track
+%  \usepackage[position, final]{neurips_2026}
+% 3. Evaluations & Datasets Track
+ % \usepackage[eandd, final]{neurips_2026}
+% 4. Creative AI Track
+%  \usepackage[creativeai, final]{neurips_2026}
+% 5. Workshop with single-blind reviewing
+%  \usepackage[sglblindworkshop, final]{neurips_2026}
+% 6. Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop, final]{neurips_2026}
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote.
+% For workshops (5., 6.), the authors should add the name of the workshop, "\workshoptitle" command is used to set the workshop title.
+% \workshoptitle{WORKSHOP TITLE}
+
+% "preprint" option is used for arXiv or other preprint submissions
+ % \usepackage[preprint]{neurips_2026}
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2026}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage[hidelinks]{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage[x11names]{xcolor}         % colors
+\usepackage[export]{adjustbox} % for the grid of qualitative results
+
+\definecolor{TabBlue}{rgb}{0.122, 0.467, 0.706}
+\definecolor{TabGray}{rgb}{0.498, 0.498, 0.498}
+\definecolor{TabPink}{rgb}{0.890, 0.467, 0.761}
+\definecolor{TabBrown}{rgb}{0.549, 0.337, 0.294}
+\definecolor{TabPurple}{rgb}{0.580, 0.404, 0.741}
+\definecolor{TabGreen}{rgb}{0.173, 0.627, 0.173}
+\definecolor{TabOrange}{rgb}{1.000, 0.498, 0.055}
+\definecolor{TabDarkRed}{rgb}{0.550, 0.060, 0.060}
+\definecolor{TabCyan}{rgb}{0.000, 0.749, 0.749}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{pgfplots}  
+\usepackage{twemojis}
+\usepackage{siunitx}  % for \SI command
+\usepackage{wrapfig}
+\pgfplotsset{compat=1.18}   % Match your PGFPlots version
+
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote. 
+\title{Point Cloud Sequence Encoding for Material-conditioned Graph Network Simulators}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+\input{definitions/acronyms}
+\input{definitions/authors}
+\input{definitions/math_commands}
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+\newcommand{\claude}[1]{\textcolor[RGB]{70,130,180}{#1}}
+\newcommand{\niklas}[1]{\textcolor[RGB]{215,178,145}{#1}}
+\begin{document}
+
+
+\maketitle
+
+\input{content/01_abstract}
+\input{content/02_introduction}
+\input{content/03_related_work}
+\input{content/04_method}
+\input{content/05_experiments}
+\input{content/06_results}
+\input{content/07_conclusion}
+\input{content/08_acknowledgements}
+
+
+\bibliography{peach, balazs}
+\bibliographystyle{unsrtnat}
+
+\newpage
+
+\appendix
+
+\input{content/a00_broader_impact}
+\input{content/a01_appendix_methods_and_hps}
+\input{content/a02_datasets_information}
+\input{content/a04_appendix_real_world}
+\input{content/a03b_appendix_quantitative_results}
+\input{content/a05_statistical_analysis}
+\input{content/a03_appendix_visualizations}
+
+\clearpage
+\input{checklist.tex}
+
+
+\end{document}

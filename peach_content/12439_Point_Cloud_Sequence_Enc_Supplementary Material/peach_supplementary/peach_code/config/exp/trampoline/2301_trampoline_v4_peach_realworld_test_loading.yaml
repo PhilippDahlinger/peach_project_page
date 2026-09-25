@@ -1,0 +1,31 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: trampoline_pointpatch_encoder_mango_decoder
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4_realworld
+  - override /algorithm/meta_aggregation: softmax_pool
+
+# local
+dataset:
+  cut_length: 20
+
+resume_from_checkpoint: True
+old_exp_folder: "output/hydra/training/2026-04-23/2300_trampoline_v4_peach_realworld_test_loading/+ex=2301_trampoline_v4_peach_realworld_test_loading,+pl=local_multirun,dat_siz=2,dat_siz=2,ena=True"
+
+wandb:
+  enabled: True
+  offline: True
+
+exp_name: 2300_trampoline_v4_peach_realworld_test_loading
+
+seed: 1237
+#
+#hydra:
+#  sweeper:
+#    grid_params:
+#      dataset.pc_preprocessing.temporal_stride: 2, 3, 4, 5
+
+
+
+

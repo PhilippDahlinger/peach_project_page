@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: cnn_deepset_mango_decoder
+  - override /dataset: trampoline_v4
+
+wandb:
+  enabled: True
+
+resume_from_checkpoint: True
+old_exp_folder: "output/hydra/training/2026-04-24/5303_trampoline_v4_cnn_deepset_mango_decoder/+ex_exp_v4=53_cnn_deepset_mango_decoder,+pl=jsc_clusterduck"
+
+exp_name: 5303d2_trampoline_v4_cnn_deepset_mango_decoder
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

@@ -1,0 +1,83 @@
+\begin{tikzpicture}
+    \tikzstyle{every node}=[font=\scriptsize]
+    \input{figures/quantitative_results/tikzcolors}
+    \begin{axis}[%
+        hide axis,
+        xmin=10,
+        xmax=50,
+        ymin=0,
+        ymax=0.1,
+        legend style={
+            draw=none,
+            legend cell align=left,
+            legend columns=8,
+            column sep=0.8ex,
+            % smaller gap between the two point cloud columns
+            /tikz/column 2/.style={column sep=0.3ex},
+        }
+    ]
+    % ---------------- Row 1: group headers ----------------
+    \addlegendimage{area legend, fill=white, draw=white, line width=0pt}
+    \addlegendentry{\rlap{\hspace{-8.2mm}\textbf{Point cloud context:}}}
+    \addlegendimage{area legend, fill=white, draw=white, line width=0pt}
+    \addlegendentry{}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{\hspace{1ex}}
+    \addlegendimage{area legend, fill=white, draw=white, line width=0pt}
+    \addlegendentry{\hspace{-8.2mm}\textbf{Mesh context:}}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{\hspace{1ex}}
+    \addlegendimage{area legend, fill=white, draw=white, line width=0pt}
+    \addlegendentry{\hspace{-8.2mm}\textbf{Oracle context:}}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{\hspace{1ex}}
+    \addlegendimage{area legend, fill=white, draw=white, line width=0pt}
+    \addlegendentry{\hspace{-8.2mm}\textbf{No context:}}
+
+    % ---------------- Row 2 ----------------
+    \addlegendimage{area legend, fill=tabblue}
+    \addlegendentry{PEACH (ours)}
+    \addlegendimage{area legend, fill=tabpink}
+    \addlegendentry{PSTNet Encoder}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{}
+    \addlegendimage{area legend, fill=tabcyan}
+    \addlegendentry{MaNGO}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{}
+    \addlegendimage{area legend, fill=tabgreen}
+    \addlegendentry{Oracle}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{}
+    \addlegendimage{area legend, fill=tabgray}
+    \addlegendentry{No Context}
+
+    % ---------------- Row 3 ----------------
+    \addlegendimage{area legend, fill=tabbrown}
+    \addlegendentry{GNN Encoder}
+    \addlegendimage{area legend, fill=tabolive}
+    \addlegendentry{Test-Time Opt.}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{}
+    % empty cell below MaNGO
+    \addlegendimage{area legend, fill=white, draw=white, line width=0pt}
+    \addlegendentry{}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{}
+    \addlegendimage{area legend, fill=tabpurple}
+    \addlegendentry{Oracle (MGN)}
+    % spacer
+    \addlegendimage{empty legend}
+    \addlegendentry{}
+    \addlegendimage{area legend, fill=taborange}
+    \addlegendentry{No Context (MGN)}
+    \end{axis}
+\end{tikzpicture}

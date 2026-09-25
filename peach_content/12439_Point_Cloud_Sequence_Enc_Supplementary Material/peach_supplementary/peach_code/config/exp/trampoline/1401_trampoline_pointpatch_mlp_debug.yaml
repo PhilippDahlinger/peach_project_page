@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: trampoline_pointpatch_encoder_mlp
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v5
+  - override /algorithm/meta_aggregation: softmax_pool
+#  - override /trainer: single_cpu_standard
+
+wandb:
+  enabled: False
+
+dataset:
+    train_dataset:
+        dataset_size: 2  # artificially reduce dataset size for debugging
+        max_context_size: 1
+    eval_dataset:
+        dataset_size: 2  # artificially reduce dataset size for debugging
+        context_size: 1
+        target_size: 1
+
+exp_name: 1419_trampoline_pointpatch_mlp_debug
+
+
+
+

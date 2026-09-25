@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pointpatch_encoder_mlp
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4
+  - override /algorithm/meta_aggregation: softmax_pool
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 0901_trampoline_pointpatch_mlp_grid
+
+#  optimizer:
+#    weight_decay: 5.0e-4
+
+
+hydra:
+  sweeper:
+    grid_params:
+      algorithm.encoder.patch_size: 8, 16
+      dataset.pc_preprocessing.temporal_stride: 1, 3
+      algorithm.optimizer.lr: 5.0e-5, 1.0e-4
+

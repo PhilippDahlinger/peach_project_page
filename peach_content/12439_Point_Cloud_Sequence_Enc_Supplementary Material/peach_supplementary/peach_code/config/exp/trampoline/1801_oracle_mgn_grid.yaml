@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mgn
+  - override /algorithm/optimizer: adamw
+  - override /dataset: step_trampoline_v5
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 1801_trampoline_oracle_mgn_grid
+
+hydra:
+  sweeper:
+    grid_params:
+      dataset.train_dataset.noise_scale: 0.0001, 0.0005, 0.0007, 0.001
+

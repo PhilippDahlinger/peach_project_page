@@ -1,0 +1,64 @@
+% \begin{figure}[t]
+%     \centering
+%     \makebox[\textwidth][c]{
+%     \input{figures/quantitative_results/legend}
+%     }
+%     \scalebox{0.39}{
+%         \input{figures/quantitative_results/db/ml_loss/bar_db_bar}
+%     }
+%     \scalebox{0.39}{
+%         \input{figures/quantitative_results/sd/ml_loss/bar_sd_bar}
+%     }
+%     \scalebox{0.39}{
+%         \input{figures/quantitative_results/bbv/ml_loss/bar_bbv_bar}
+%     }
+%     \scalebox{0.39}{
+%         \input{figures/quantitative_results/trampoline/ml_loss/bar_trampoline_v4_sim_bar}
+%     }
+%     % \input{figures/quantitative_results/db/ml_loss/bar_db_bar}
+%     % \includegraphics[width=0.24\textwidth]{figures/quantitative_results/sd/ml_loss/bar_sd_bar.pdf}
+%     % \includegraphics[width=0.24\textwidth]{figures/quantitative_results/bbv/ml_loss/bar_bbv_bar.pdf}
+%     % \includegraphics[width=0.24\textwidth]{figures/quantitative_results/trampoline/ml_loss/bar_trampoline_v4_sim_bar.pdf}
+%     \caption{
+%     Full simulation rollout and material property \gls{mse} across different encoder architectures as a function of the number of context sequences for (\textbf{left}) \texttt{Deforming Block} and (\textbf{right}) \texttt{Sheet Deformation}.
+%     \gls{peach} consistently performs similar to the mesh-based \gls{mango}, improving over other point cloud encoders and achieving near-Oracle performance on \texttt{Deforming Block}.
+%     }
+%     \label{fig:quantitative_comparison}
+% \end{figure}
+
+\begin{figure}[t]
+    \centering
+    % Legend at the top
+    \makebox[\textwidth][c]{
+        \input{figures/quantitative_results/legend}
+    }
+    % Row of plots with labels underneath
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \scalebox{0.39}{\input{figures/quantitative_results/db/ml_loss/bar_db_bar}}\\
+        {\small \hspace{6mm}\texttt{Deforming Block}}
+    \end{minipage}
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \scalebox{0.39}{\input{figures/quantitative_results/sd/ml_loss/bar_sd_bar}}\\
+        {\small \hspace{4mm}\texttt{Sheet Deformation}}
+    \end{minipage}
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \scalebox{0.39}{\input{figures/quantitative_results/bbv/ml_loss/bar_bbv_bar}}\\
+        {\small \hspace{3mm}\texttt{Bending Beam}}
+    \end{minipage}
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \scalebox{0.39}{\input{figures/quantitative_results/trampoline/ml_loss/bar_trampoline_v4_sim_bar}}\\
+        {\small \hspace{4mm}\texttt{Trampoline}}
+    \end{minipage}
+
+    \caption{
+        Simulation accuracy (MSE) on simulation datasets using 8 context trajectories.
+        \gls{peach} consistently outperforms other methods relying on point cloud observations for simulator adaptation.
+        \gls{peach} performs comparably to \glsunset{mango}\gls{mango}, which uses privileged information in the form of meshes, and sometimes achieves performance competitive with the Oracle models.
+    }
+    \vspace{-0.4cm}
+    \label{fig:main_results}
+\end{figure}

@@ -1,0 +1,78 @@
+\begin{tikzpicture}
+\definecolor{tabblue}{RGB}{31,119,180}
+\definecolor{tabgreen}{RGB}{44,160,44}
+\definecolor{tabcyan}{RGB}{23,190,207}
+\definecolor{tabgray}{RGB}{127,127,127}
+\definecolor{taborange}{RGB}{255,127,14}
+\definecolor{tabpurple}{RGB}{148,103,189}
+\definecolor{tabpink}{RGB}{227,119,194}
+\definecolor{tabbrown}{RGB}{140,86,75}
+\definecolor{tabolive}{RGB}{188,189,34}
+
+\begin{semilogyaxis}[
+  xmin=-0.5, xmax=7.1,
+  xtick=\empty,
+  ymin=1e-5, ymax=1e-2,
+  ymajorgrids,
+  tick align=outside,
+  ytick pos=left,
+  tick label style={font=\large},
+]
+
+% Group 1: PEACH/tabblue (0), pstnet/tabpink (0.6), gnn_encoder/tabbrown (1.2), test_opt/tabolive (1.8)
+\draw[fill=tabblue,  draw=black, line width=0.5pt] (axis cs:-0.3, 1e-5) rectangle (axis cs:0.3, 2.68e-4);
+\draw[fill=tabpink,  draw=black, line width=0.5pt] (axis cs:0.3,  1e-5) rectangle (axis cs:0.9, 1.20e-3);
+\draw[fill=tabbrown, draw=black, line width=0.5pt] (axis cs:0.9,  1e-5) rectangle (axis cs:1.5, 8.70e-4);
+\draw[fill=tabolive, draw=black, line width=0.5pt] (axis cs:1.5,  1e-5) rectangle (axis cs:2.1, 5.52e-5);
+
+% Group 2: MaNGO/tabcyan (3.0)
+\draw[fill=tabcyan,   draw=black, line width=0.5pt] (axis cs:2.7, 1e-5) rectangle (axis cs:3.3, 3.64e-4);
+
+% Group 3: Oracle/tabgreen (4.2), Oracle MGN/tabpurple (4.8)
+\draw[fill=tabgreen,  draw=black, line width=0.5pt] (axis cs:3.9, 1e-5) rectangle (axis cs:4.5, 2.93e-4);
+\draw[fill=tabpurple, draw=black, line width=0.5pt] (axis cs:4.5, 1e-5) rectangle (axis cs:5.1, 1.85e-3);
+
+% Group 4: No Context/tabgray (6.0), No Context MGN/taborange (6.6)
+\draw[fill=tabgray,   draw=black, line width=0.5pt] (axis cs:5.7, 1e-5) rectangle (axis cs:6.3, 7.89e-4);
+\draw[fill=taborange, draw=black, line width=0.5pt] (axis cs:6.3, 1e-5) rectangle (axis cs:6.9, 2.04e-3);
+
+% Error bars
+% tabblue/PEACH (center 0)
+\draw[black, semithick] (axis cs:0,    2.61e-4) -- (axis cs:0,    2.74e-4);
+\draw[black, semithick] (axis cs:-0.15,2.61e-4) -- (axis cs:0.15, 2.61e-4);
+\draw[black, semithick] (axis cs:-0.15,2.74e-4) -- (axis cs:0.15, 2.74e-4);
+% tabpink/pstnet (center 0.6)
+\draw[black, semithick] (axis cs:0.6,  9.16e-4) -- (axis cs:0.6,  1.51e-3);
+\draw[black, semithick] (axis cs:0.45, 9.16e-4) -- (axis cs:0.75, 9.16e-4);
+\draw[black, semithick] (axis cs:0.45, 1.51e-3) -- (axis cs:0.75, 1.51e-3);
+% tabbrown/gnn_encoder (center 1.2)
+\draw[black, semithick] (axis cs:1.2,  6.82e-4) -- (axis cs:1.2,  9.86e-4);
+\draw[black, semithick] (axis cs:1.05, 6.82e-4) -- (axis cs:1.35, 6.82e-4);
+\draw[black, semithick] (axis cs:1.05, 9.86e-4) -- (axis cs:1.35, 9.86e-4);
+% tabolive/test_opt (center 1.8)
+\draw[black, semithick] (axis cs:1.8,  5.13e-5) -- (axis cs:1.8,  5.90e-5);
+\draw[black, semithick] (axis cs:1.65, 5.13e-5) -- (axis cs:1.95, 5.13e-5);
+\draw[black, semithick] (axis cs:1.65, 5.90e-5) -- (axis cs:1.95, 5.90e-5);
+% tabcyan/MaNGO (center 3.0)
+\draw[black, semithick] (axis cs:3.0,  3.31e-4) -- (axis cs:3.0,  4.03e-4);
+\draw[black, semithick] (axis cs:2.85, 3.31e-4) -- (axis cs:3.15, 3.31e-4);
+\draw[black, semithick] (axis cs:2.85, 4.03e-4) -- (axis cs:3.15, 4.03e-4);
+% tabgreen/oracle (center 4.2)
+\draw[black, semithick] (axis cs:4.2,  2.80e-4) -- (axis cs:4.2,  3.07e-4);
+\draw[black, semithick] (axis cs:4.05, 2.80e-4) -- (axis cs:4.35, 2.80e-4);
+\draw[black, semithick] (axis cs:4.05, 3.07e-4) -- (axis cs:4.35, 3.07e-4);
+% tabpurple/mgn_oracle (center 4.8)
+\draw[black, semithick] (axis cs:4.8,  1.55e-3) -- (axis cs:4.8,  2.12e-3);
+\draw[black, semithick] (axis cs:4.65, 1.55e-3) -- (axis cs:4.95, 1.55e-3);
+\draw[black, semithick] (axis cs:4.65, 2.12e-3) -- (axis cs:4.95, 2.12e-3);
+% tabgray/No Context (center 6.0)
+\draw[black, semithick] (axis cs:6.0,  7.70e-4) -- (axis cs:6.0,  8.12e-4);
+\draw[black, semithick] (axis cs:5.85, 7.70e-4) -- (axis cs:6.15, 7.70e-4);
+\draw[black, semithick] (axis cs:5.85, 8.12e-4) -- (axis cs:6.15, 8.12e-4);
+% taborange/No Context MGN (center 6.6)
+\draw[black, semithick] (axis cs:6.6,  1.70e-3) -- (axis cs:6.6,  2.33e-3);
+\draw[black, semithick] (axis cs:6.45, 1.70e-3) -- (axis cs:6.75, 1.70e-3);
+\draw[black, semithick] (axis cs:6.45, 2.33e-3) -- (axis cs:6.75, 2.33e-3);
+
+\end{semilogyaxis}
+\end{tikzpicture}

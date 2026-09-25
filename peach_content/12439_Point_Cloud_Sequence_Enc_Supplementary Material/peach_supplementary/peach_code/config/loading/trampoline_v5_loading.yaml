@@ -1,0 +1,6 @@
+enable_loading: True  # general flag if loading is enabled
+checkpoint: best   # Choose between "best" and "last", or specify an epoch (has to be one of the saved epochs)
+root_path: ???  # path to the root of the experiment
+output_path:  evaluations/paper_exp/trampoline_v5   
+seeds: null
+job_types: null

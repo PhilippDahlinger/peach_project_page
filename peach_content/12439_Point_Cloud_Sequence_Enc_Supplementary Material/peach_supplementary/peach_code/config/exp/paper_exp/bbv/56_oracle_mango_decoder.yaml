@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mango_decoder
+  - override /dataset: bbv_v3
+
+wandb:
+  enabled: True
+
+algorithm:
+  edge_loss_weight: 20
+  edge_loss_type: length
+
+exp_name: 5604_bbv_oracle_mango_decoder
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

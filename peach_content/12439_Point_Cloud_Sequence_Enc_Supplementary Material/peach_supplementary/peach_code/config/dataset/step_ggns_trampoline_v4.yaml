@@ -1,0 +1,60 @@
+name: step_ggns_trampoline
+wandb_name: trampoline
+is_3d: True
+z_pos_feature: False
+root: ../datasets/pc_mango/trampoline_v4.hdf5
+cut_length: 50  # if -1, use all time steps, else only use the first cut_length time steps of each trajectory
+temporal_stride: 2  # only use every nth time step, applied after cut_length
+predict_collider: True
+connection_node_indices_path: "config/trampoline_collider_connection_nodes_v4.json"
+
+cache_path: ../datasets/pc_mango/ggns_cache/trampoline
+
+
+# Dummy pc_preprocessing for pipeline compatibility
+pc_preprocessing:
+  output_type: tensor
+  temporal_stride: 2
+  pcd_subsample_points: 512  # not used! use pcd_subsample_points
+
+train_dataset:
+  cache_path: ${dataset.cache_path}
+  root: ${dataset.root}
+  pcd_hdf5_path: ../datasets/pc_mango/trampoline_v4_pcd.hdf5
+  cut_length: ${dataset.cut_length}
+  temporal_stride: ${dataset.temporal_stride}
+  mesh_key: sheet_pos
+  collider_key: sphere_pos
+  mesh_faces_key: sheet_cells
+  batch_size: 16
+  connectivity_setting: trampoline
+  use_mesh_coordinates: True
+  use_colors: False
+  dataset_size: null
+  pcd_subsample_points: 1024
+  is_3d: ${dataset.is_3d}
+  predict_collider: ${dataset.predict_collider}
+  connection_node_indices_path: ${dataset.connection_node_indices_path}
+
+
+eval_dataset:
+  cache_path: ${dataset.cache_path}
+  root: ${dataset.root}
+  pcd_hdf5_path: ${dataset.train_dataset.pcd_hdf5_path}
+  target_test_trajs: ${algorithm.evaluator.target_test_trajs}
+  batch_size: ${len:${algorithm.evaluator.target_test_trajs}}
+  cut_length: ${dataset.cut_length}
+  temporal_stride: ${dataset.temporal_stride}
+  mesh_key: ${dataset.train_dataset.mesh_key}
+  collider_key: ${dataset.train_dataset.collider_key}
+  mesh_faces_key: ${dataset.train_dataset.mesh_faces_key}
+  connectivity_setting: ${dataset.train_dataset.connectivity_setting}
+  use_mesh_coordinates: ${dataset.train_dataset.use_mesh_coordinates}
+  use_colors: ${dataset.train_dataset.use_colors}
+  dataset_size: null
+  pcd_subsample_points: ${dataset.train_dataset.pcd_subsample_points}
+  is_3d: ${dataset.is_3d}
+  predict_collider: ${dataset.predict_collider}
+  connection_node_indices_path: ${dataset.connection_node_indices_path}
+
+

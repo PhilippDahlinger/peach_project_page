@@ -1,0 +1,40 @@
+name: step_db
+wandb_name: db
+root: ../datasets/pc_mango/db_v4.hdf5
+z_pos_feature: False
+
+split_type: standard  # options: standard, small_data, ood
+
+pc_preprocessing:
+  output_type: tensor  # options: tensor, graph
+  temporal_stride: 2
+  num_subsample_points: 512  # null means no subsampling
+
+train_dataset:
+  root: ${dataset.root}
+  batch_size: 64
+  initial_vel: zero  # choose between zero and constant
+  dataset_size: null  # artificially reduce dataset size for debugging
+  random_traj_selection: True
+  min_context_size: 1
+  max_context_size: 1  # for performance reasons, we do not use context dataset for step
+  min_target_size: 1
+  max_target_size: 1
+  noise_scale: 0.0007
+  material_properties: ${algorithm.material_properties}
+  data_modalities: ${algorithm.data_modalities}
+  split_type: ${dataset.split_type}
+  pc_preprocessing: ${dataset.pc_preprocessing}
+
+
+eval_dataset:
+  root: ${dataset.root}
+  initial_vel: ${..train_dataset.initial_vel}
+  dataset_size: null # artificially reduce dataset size for debugging
+  random_traj_selection: False
+  context_size: 1
+  target_size: 1
+  material_properties: ${..train_dataset.material_properties}
+  data_modalities: ${..train_dataset.data_modalities}
+  split_type: ${dataset.split_type}
+  pc_preprocessing: ${..train_dataset.pc_preprocessing}

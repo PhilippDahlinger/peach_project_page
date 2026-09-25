@@ -1,0 +1,58 @@
+# The base Hydra config
+
+defaults:
+  - algorithm: ???
+  - dataset: trampoline_v4_realworld
+  - realworld_exp: ???
+  - _self_
+
+algorithm:
+  data_modalities: ['pc', 'mesh', 'sdf']
+
+pointcloud_root: ../datasets/real_peach/preprocessed_right_cam
+
+vis_output_path: output/real_world/visualizations/${exp_name}
+results_output_path: output/real_world/results/${exp_name}
+xdmf_per_condition: 10
+
+cache_path: ../datasets/real_peach
+
+# only need the meshes and the functionality, not the actual dataset, so we can set the dataset size to 1 for both train and eval
+dataset:
+  root: ../datasets/pc_mango/trampoline_v4.hdf5
+  external_pcd_root: ../datasets/pc_mango/trampoline_v4_pcd_1cam_combined_cropped.hdf5
+  external_sdf_root: ../datasets/pc_mango/trampoline_v4_sdf.hdf5
+  train_dataset:
+    dataset_size: 1
+  eval_dataset:
+    dataset_size: 1
+
+pc_time_stamp_scaler: 1.0
+pc_time_stamp_offset: 0.01
+
+
+#latex_ids: []  # leave blank for all
+#sphere_ids: []  # leave blank for all
+#traj_filter: []
+
+
+fps_num_points: 1024
+pc_length: 13
+
+exp_name: ???
+
+
+
+seed: 0
+
+hydra:
+  run:
+    dir: ./output/hydra/realworld/${now:%Y-%m-%d}/${exp_name}
+  sweep:
+    dir: ./output/hydra/realworld/${now:%Y-%m-%d}
+    subdir: ${exp_name}/${sub_dir_shortener:${hydra:job.override_dirname}, 3, False}/seed_${format:${seed}, '{:02d}'}
+  job:
+    config:
+      override_dirname:
+        exclude_keys:
+          - seed

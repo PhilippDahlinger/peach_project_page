@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: dummy_mango_decoder
+  - override /dataset: db_v4
+  - override /algorithm/evaluator: test_evaluator
+  - override /loading: db_loading
+
+loading:
+  root_path: checkpoints/db/5201_db_dummy_mango_decoder
+
+
+exp_name: EVAL_52_db_dummy_mango_decoder

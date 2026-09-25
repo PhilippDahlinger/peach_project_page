@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: cnn_deepset_mango_decoder
+  - override /dataset: sd_v1
+  - override /algorithm/evaluator: test_evaluator
+  - override /loading: sd_loading
+
+loading:
+  root_path: #todo, on bwuni
+
+
+exp_name: EVAL_53_sd_cnn_deepset_mango_decoder

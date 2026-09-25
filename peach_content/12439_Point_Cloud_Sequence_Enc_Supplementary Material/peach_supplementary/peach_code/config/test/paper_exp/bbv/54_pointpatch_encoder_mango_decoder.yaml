@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pointpatch_encoder_mango_decoder
+  - override /dataset: bbv_v3
+  - override /algorithm/evaluator: bbv_test_evaluator
+  - override /loading: bbv_loading
+
+loading:
+  root_path: checkpoints/bbv/5403_bbv_pointpatch_encoder_mango_decoder
+
+
+exp_name: EVAL_54_trampoline_v4_pointpatch_encoder_mango_decoder

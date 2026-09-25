@@ -1,0 +1,66 @@
+name: trampoline
+wandb_name: trampoline
+root: ../datasets/pc_mango/trampoline_v5.hdf5
+external_pcd_root: ../datasets/pc_mango/trampoline_v5_pcd.hdf5
+pc_node_type_name_key: "pc_node_types"  # start of the key for node type information in the hdf5 file
+cut_length: 50  # if -1, use all time steps, else only use the first cut_length time steps of each trajectory
+temporal_stride: 1  # only use every nth time step, applied after cut_length
+z_pos_feature: False
+connection_node_indices_path: "config/trampoline_collider_connection_nodes_v5.json"
+external_sdf_root: ../datasets/pc_mango/trampoline_v5_sdf.hdf5
+
+
+split_type: standard  # options: standard, small_data, ood
+
+pc_preprocessing:
+  output_type: tensor  # options: tensor, graph
+  temporal_stride: 2
+  num_subsample_points: 1024  # null means no subsampling
+
+sdf_preprocessing:
+  temporal_stride: ${dataset.pc_preprocessing.temporal_stride}
+  num_query_points_per_ts: 50
+  scale_factor: 30.0 # targets become tanh(sdf / scale_factor)
+
+train_dataset:
+  root: ${dataset.root}
+  external_sdf_root: ${dataset.external_sdf_root}
+  external_pcd_root: ${dataset.external_pcd_root}
+  pc_node_type_name_key: ${dataset.pc_node_type_name_key}
+  connection_node_indices_path: ${dataset.connection_node_indices_path}
+  cut_length: ${dataset.cut_length}
+  temporal_stride: ${dataset.temporal_stride}
+  batch_size: 1
+  initial_vel: zero  # choose between zero and constant
+  dataset_size: null  # artificially reduce dataset size for debugging
+  random_traj_selection: True
+  min_context_size: 1
+  max_context_size: 8
+  min_target_size: 1
+  max_target_size: 1
+  material_properties: ${algorithm.material_properties}
+  data_modalities: ${algorithm.data_modalities}
+  split_type: ${dataset.split_type}
+  pc_preprocessing: ${dataset.pc_preprocessing}
+  sdf_preprocessing: ${dataset.sdf_preprocessing}
+
+
+
+eval_dataset:
+  root: ${dataset.root}
+  external_sdf_root: ${dataset.external_sdf_root}
+  external_pcd_root: ${dataset.external_pcd_root}
+  pc_node_type_name_key: ${dataset.pc_node_type_name_key}
+  connection_node_indices_path: ${dataset.connection_node_indices_path}
+  cut_length: ${dataset.cut_length}
+  temporal_stride: ${dataset.temporal_stride}
+  initial_vel: ${..train_dataset.initial_vel}
+  dataset_size: null # artificially reduce dataset size for debugging
+  random_traj_selection: False
+  context_size: 4  # deterministic
+  target_size: 4
+  material_properties: ${..train_dataset.material_properties}
+  data_modalities: ${..train_dataset.data_modalities}
+  split_type: ${dataset.split_type}
+  pc_preprocessing: ${..train_dataset.pc_preprocessing}
+  sdf_preprocessing: ${dataset.sdf_preprocessing}

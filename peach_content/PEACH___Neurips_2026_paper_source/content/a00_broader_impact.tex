@@ -1,0 +1,9 @@
+\section{Broader Impact}
+\label{app:broader_impact}
+\gls{peach} is a method for simulating deformable objects from point cloud observations, aimed at making physics-based simulation more accessible when material properties are unknown or hard to measure.
+Efficient real-to-sim transfer of this kind could reduce reliance on costly physical experiments in engineering and scientific workflows and support digital twin construction for monitoring and design.
+It can additionally lower the barrier to high-fidelity simulation in domains such as biomechanics, materials science, and soft-body engineering, where calibrating constitutive models is traditionally laborious.
+
+At the same time, any improvement in simulation fidelity carries dual-use potential, for instance in the design of weapons or other harmful artifacts. We view \gls{peach} as a generic enabling technology in this regard, with no direct path to harm beyond what is already implied by progress in learned simulation more broadly. 
+Like any data-driven model, \gls{peach} may also inherit biases from its training distribution. In particular, materials, geometries, and process conditions that are underrepresented during training are likely to be predicted less accurately, which could lead to silent failures if the method is used outside its validated regime. 
+We therefore encourage practitioners to validate \gls{peach} on their target domain before relying on its predictions in decision-critical settings.

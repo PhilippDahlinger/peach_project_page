@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: trampoline_pointpatch_encoder_mango_decoder
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4
+  - override /algorithm/meta_aggregation: softmax_pool
+
+
+
+wandb:
+  enabled: True
+
+exp_name: 1502_trampoline_pointpatch_sim_grid
+
+hydra:
+  sweeper:
+    grid_params:
+      dataset.pc_preprocessing.temporal_stride: 2, 3
+
+
+
+

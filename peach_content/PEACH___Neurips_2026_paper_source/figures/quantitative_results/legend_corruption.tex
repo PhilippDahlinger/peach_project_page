@@ -1,0 +1,42 @@
+\begin{tikzpicture}
+    \tikzstyle{every node}=[font=\scriptsize]
+    \input{figures/quantitative_results/tikzcolors}
+
+    \begin{axis}[%
+        hide axis,
+        xmin=10,
+        xmax=50,
+        ymin=0,
+        ymax=0.1,
+        legend style={
+            draw=none,
+            legend cell align=left,
+            legend columns=3,
+            /tikz/every odd column/.append style={column sep=1ex},
+            /tikz/every even column/.append style={column sep=1.6ex},
+        }
+    ]
+
+        \addlegendimage{area legend, fill=tabblue}
+    \addlegendentry{PEACH (no corruption)}
+
+    \addlegendimage{area legend, fill=tabpurple}
+    \addlegendentry{PEACH (low corruption)}
+
+    \addlegendimage{area legend, fill=tabcyan}
+    \addlegendentry{PEACH (medium corruption)}
+
+    \addlegendimage{area legend, fill=tabred}
+    \addlegendentry{PEACH (high corruption)}
+
+        \addlegendimage{area legend, fill=tabbrown}
+    \addlegendentry{PEACH (high corruption, no data augm.)}
+
+    \addlegendimage{area legend, fill=tabgray}
+    \addlegendentry{No Context}
+
+    \addlegendimage{area legend, fill=tabgreen}
+    \addlegendentry{``Oracle''}
+
+    \end{axis}
+\end{tikzpicture}

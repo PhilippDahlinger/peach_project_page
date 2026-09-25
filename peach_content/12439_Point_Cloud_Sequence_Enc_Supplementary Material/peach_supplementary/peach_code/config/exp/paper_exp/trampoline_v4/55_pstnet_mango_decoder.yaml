@@ -1,0 +1,17 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pstnet_mango_decoder
+  - override /dataset: trampoline_v4
+
+wandb:
+  enabled: True
+
+exp_name: 5503_trampoline_v4_pstnet_mango_decoder
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004
+

@@ -1,0 +1,32 @@
+\begin{figure}[t]
+    \makebox[\textwidth][c]{
+        \input{figures/quantitative_results/legend_ablations}
+    }
+  \centering
+     \begin{minipage}{0.32\textwidth}
+        \scalebox{0.6}{\input{figures/quantitative_results/db/ml_loss/bar_db_ablation_bar}}\\
+        {\small \hspace*{18mm} \texttt{Deforming Block}}
+     \end{minipage}
+     \hspace{4mm}
+     \begin{minipage}{0.32\textwidth}
+        \scalebox{0.6}{\input{figures/quantitative_results/sd/ml_loss/bar_sd_ablation}}\\
+        {\small \hspace*{8mm}\texttt{Sheet Deformation}}
+     \end{minipage}
+     \hspace{-4mm}
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \scalebox{0.6}{\input{figures/quantitative_results/db_ood/ml_loss/bar_db_ood_bar}}\\
+        {\small \hspace*{4mm}\texttt{Deforming Block (OOD)}}
+        
+    \end{minipage}
+  % \includegraphics[width=0.33\textwidth]{figures/latent_space_vis/pca_peach_db_poisson.pdf}
+  % \includegraphics[width=0.33\textwidth]{figures/latent_space_vis/pca_peach_trampoline_bivariate.pdf}
+  \caption{  \textbf{Left, Center:} Ablation study of auxiliary losses in PEACH on the
+  \texttt{Deforming Block} and \texttt{Sheet Deformation} environments, respectively.
+  \textbf{Right:} Performance of PEACH on out-of-distribution test tasks for
+  \texttt{Deforming Block}.}
+  \vspace{-0.4cm}
+  \label{fig:generalizations_ablations}
+\end{figure}
+
+%PCA latent space visualization of all the Deforming Block dataset. Each dot is an encoded task, the color is its ground truth Poisson's ratio. Latent space visualizations of all further tasks are given in Appendix \todo{ref}.

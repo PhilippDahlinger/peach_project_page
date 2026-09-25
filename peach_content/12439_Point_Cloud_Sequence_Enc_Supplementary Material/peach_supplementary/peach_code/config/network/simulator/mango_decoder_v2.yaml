@@ -1,0 +1,23 @@
+name: mango_decoder
+backbone_version: v2  # v1 for original MangoBackbone, v2 for MangoBackboneV2 with Pre-LN and dropouts
+n_layers: 15
+scatter_reduce: mean
+activation: leakyrelu
+use_hidden_layers: False
+z_pos_feature: ${dataset.z_pos_feature}
+latent_dimension: 128
+time_emb_dim: 32
+time_conv_type: conv_decoder
+# V2-specific dropout parameters (only used when backbone_version: v2)
+dropout_embedding: 0.1  # defaults to dropout if null
+dropout_node: 0.1       # defaults to dropout if null
+dropout_edge: 0.1       # defaults to dropout if null
+drop_edge_p: 0.02         # probability of dropping edges during training, very low for now to avoid instability
+output_decoder:
+  latent_dimension: 128
+  regularization:
+    dropout: 0.0
+  tanh:
+    enabled: False
+    scale_factor: 0.1
+    input_scale_factor: 0.1

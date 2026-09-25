@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pstnet_mango_decoder
+  - override /dataset: db_v4
+  - override /algorithm/evaluator: test_evaluator
+  - override /loading: db_loading
+
+loading:
+  root_path: checkpoints/db/5501_db_pstnet_mango_decoder
+
+
+exp_name: EVAL_55_db_pstnet_mango_decoder

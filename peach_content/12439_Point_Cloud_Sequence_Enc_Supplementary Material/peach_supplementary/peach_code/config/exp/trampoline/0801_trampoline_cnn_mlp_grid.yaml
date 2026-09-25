@@ -1,0 +1,25 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: cnn_deepset_mlp
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4
+  - override /algorithm/meta_aggregation: softmax_pool
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 0801_trampoline_cnn_mlp_grid
+
+#  optimizer:
+#    weight_decay: 5.0e-4
+
+
+hydra:
+  sweeper:
+    grid_params:
+      algorithm.encoder.latent_dimension: 64, 128, 256
+      algorithm.optimizer.lr: 5.0e-5, 1.0e-4
+

@@ -1,0 +1,29 @@
+
+defaults:
+  - /network/pc_encoder@encoder: ip_transformer_encoder
+  - /network/mat_prop_head@mat_prop_head: mlp
+  - meta_aggregation: softmax_pool
+  - evaluator: base_evaluator
+  - optimizer: adamw
+  - scheduler: standard
+
+
+type: pc_to_mat_prop
+one_step_training: False  # Flag to check training loop to handle one step training (MGN and GGNS)
+check_val_every_n_epoch: ${trainer.check_val_every_n_epoch}
+material_properties: False  # no oracle material properties
+checkpoint_metric: val_mse
+mat_prop_loss_weight: 0.02
+
+pre_aggregation_mlp: False
+
+
+optimizer:
+  weight_decay: 5.0e-4
+  lr: 5.0e-5
+
+# dataset related configs
+data_modalities: ['pc']
+pc_preprocessing: ${dataset.pc_preprocessing}
+
+

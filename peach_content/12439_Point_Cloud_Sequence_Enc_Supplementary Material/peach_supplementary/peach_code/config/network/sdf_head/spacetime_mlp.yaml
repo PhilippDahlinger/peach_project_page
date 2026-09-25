@@ -1,0 +1,11 @@
+name: spacetime_mlp
+
+
+embed_dim: 128  # Has to match the hidden_dim of the pointpatch encoder
+knn_k: 6
+fourier_features:
+  n_wavelengths: 8
+  max_wavelength: 2.0  # required for unique encoding of positions within [-1, 1]
+  min_wavelength: 0.01
+
+decoder_dims: [-1, 256, 256, -1] # input and output dim will be determined automatically

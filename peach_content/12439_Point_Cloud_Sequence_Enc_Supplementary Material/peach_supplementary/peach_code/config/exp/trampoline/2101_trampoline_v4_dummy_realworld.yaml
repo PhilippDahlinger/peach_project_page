@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: dummy_mango_decoder
+  - override /algorithm/optimizer: adamw
+  - override /dataset: trampoline_v4_realworld
+  - override /algorithm/meta_aggregation: softmax_pool
+
+wandb:
+  enabled: True
+
+exp_name: 2105_trampoline_v4_dummy_realworld
+#
+#hydra:
+#  sweeper:
+#    grid_params:
+#      dataset.pc_preprocessing.temporal_stride: 2, 3, 4, 5
+
+
+
+

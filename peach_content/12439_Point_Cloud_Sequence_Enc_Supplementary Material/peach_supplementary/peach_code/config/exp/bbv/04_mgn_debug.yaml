@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mgn
+  - override /dataset: step_bbv_v3
+
+
+wandb:
+  enabled: True
+
+exp_name: 0400_bbv_mgn_debug
+
+

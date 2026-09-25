@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: dummy_mango_decoder
+  - _self_
+
+algorithm:
+  data_modalities: ['pc', 'mesh', 'sdf']
+model_checkpoints:
+  - checkpoints/trampoline_v4/5203d2_trampoline_v4_dummy_mango_decoder/+ex_exp_v4=52_dummy_mango_decoder,+pl=jsc_clusterduck/seed_1001/best-checkpoint-epoch=603-val_ml_loss=0.00024283.ckpt
+#  - checkpoints/trampoline_v4/5203d2_trampoline_v4_dummy_mango_decoder/+ex_exp_v4=52_dummy_mango_decoder,+pl=jsc_clusterduck/seed_1002/best-checkpoint-epoch=643-val_ml_loss=0.00024640.ckpt
+#  - checkpoints/trampoline_v4/5203d2_trampoline_v4_dummy_mango_decoder/+ex_exp_v4=52_dummy_mango_decoder,+pl=jsc_clusterduck/seed_1003/best-checkpoint-epoch=676-val_ml_loss=0.00024637.ckpt
+#  - checkpoints/trampoline_v4/5203d2_trampoline_v4_dummy_mango_decoder/+ex_exp_v4=52_dummy_mango_decoder,+pl=jsc_clusterduck/seed_1004/best-checkpoint-epoch=606-val_ml_loss=0.00024316.ckpt
+  
+latex_ids: [5]  # leave blank for all
+sphere_ids: [3]  # leave blank for all
+traj_filter: []
+
+exp_name: 01_dummy_mango_vis
+

@@ -1,0 +1,132 @@
+% =============================================================
+%  TRAMPOLINE  –  Single figure (all methods)
+% =============================================================
+\begin{figure*}[p]
+    \centering
+    {\Large \textbf{Trampoline}}\\[0.1em]
+
+    % global cropped image macro
+    \newcommand{\rowlabel}[1]{%
+        \begin{minipage}[c]{0.05\textwidth}\centering\rotatebox{90}{\scriptsize\textbf{\shortstack{#1}}}\end{minipage}%
+    }
+    \newcommand{\img}[1]{%
+        \includegraphics[width=0.155\textwidth, trim=11cm 0.01cm 11cm 0.01cm, clip, valign=m]{#1}%
+    }
+    \newcommand{\pointcloud}[1]{%
+        \includegraphics[width=\textwidth, trim=11cm 1.5cm 11cm 1.5cm, clip, valign=m]{#1}%
+    }
+
+    % Row 1: PEACH
+    \rowlabel{PEACH}%
+    \img{figures/qualitative_trajectories_trampoline/PEACH/frame_0000.png}%
+    \img{figures/qualitative_trajectories_trampoline/PEACH/frame_0005.png}%
+    \img{figures/qualitative_trajectories_trampoline/PEACH/frame_0010.png}%
+    \img{figures/qualitative_trajectories_trampoline/PEACH/frame_0015.png}%
+    \img{figures/qualitative_trajectories_trampoline/PEACH/frame_0020.png}%
+    \img{figures/qualitative_trajectories_trampoline/PEACH/frame_0024.png}\\[0.15em]
+
+    % Row 2: No Context
+    \rowlabel{No Context}%
+    \img{figures/qualitative_trajectories_trampoline/Dummy_Mango/frame_0000.png}%
+    \img{figures/qualitative_trajectories_trampoline/Dummy_Mango/frame_0005.png}%
+    \img{figures/qualitative_trajectories_trampoline/Dummy_Mango/frame_0010.png}%
+    \img{figures/qualitative_trajectories_trampoline/Dummy_Mango/frame_0015.png}%
+    \img{figures/qualitative_trajectories_trampoline/Dummy_Mango/frame_0020.png}%
+    \img{figures/qualitative_trajectories_trampoline/Dummy_Mango/frame_0024.png}\\[0.15em]
+
+    % Row 3: MANGO Dec
+    \rowlabel{MANGO}%
+    \img{figures/qualitative_trajectories_trampoline/MANGO_Dec/frame_0000.png}%
+    \img{figures/qualitative_trajectories_trampoline/MANGO_Dec/frame_0005.png}%
+    \img{figures/qualitative_trajectories_trampoline/MANGO_Dec/frame_0010.png}%
+    \img{figures/qualitative_trajectories_trampoline/MANGO_Dec/frame_0015.png}%
+    \img{figures/qualitative_trajectories_trampoline/MANGO_Dec/frame_0020.png}%
+    \img{figures/qualitative_trajectories_trampoline/MANGO_Dec/frame_0024.png}\\[0.15em]
+
+    % Row 4: MANGO Oracle
+    \rowlabel{Oracle}%
+    \img{figures/qualitative_trajectories_trampoline/Oracle_Mango/frame_0000.png}%
+    \img{figures/qualitative_trajectories_trampoline/Oracle_Mango/frame_0005.png}%
+    \img{figures/qualitative_trajectories_trampoline/Oracle_Mango/frame_0010.png}%
+    \img{figures/qualitative_trajectories_trampoline/Oracle_Mango/frame_0015.png}%
+    \img{figures/qualitative_trajectories_trampoline/Oracle_Mango/frame_0020.png}%
+    \img{figures/qualitative_trajectories_trampoline/Oracle_Mango/frame_0024.png}\\[0.15em]
+    \par\vspace{0.15em}
+
+    % Row 5: MGN
+    \rowlabel{No Context \\ (MGN)}%
+    \img{figures/qualitative_trajectories_trampoline/MGN/frame_0000.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN/frame_0005.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN/frame_0010.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN/frame_0015.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN/frame_0020.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN/frame_0024.png}\\[0.15em]
+
+    % Row 6: MGN Oracle
+    \rowlabel{Oracle \\ (MGN)}%
+    \img{figures/qualitative_trajectories_trampoline/MGN_Oracle/frame_0000.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN_Oracle/frame_0005.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN_Oracle/frame_0010.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN_Oracle/frame_0015.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN_Oracle/frame_0020.png}%
+    \img{figures/qualitative_trajectories_trampoline/MGN_Oracle/frame_0024.png}\\[0.15em]
+
+    % Row 7: GNN Encoder
+    \rowlabel{GNN \\ Encoder}%
+    \img{figures/qualitative_trajectories_trampoline/GNN/frame_0000.png}%
+    \img{figures/qualitative_trajectories_trampoline/GNN/frame_0005.png}%
+    \img{figures/qualitative_trajectories_trampoline/GNN/frame_0010.png}%
+    \img{figures/qualitative_trajectories_trampoline/GNN/frame_0015.png}%
+    \img{figures/qualitative_trajectories_trampoline/GNN/frame_0020.png}%
+    \img{figures/qualitative_trajectories_trampoline/GNN/frame_0024.png}\\[0.15em]
+
+    % Row 8: PSTNet Encoder
+    \rowlabel{PSTNet \\ Encoder}%
+    \img{figures/qualitative_trajectories_trampoline/PSTNET/frame_0000.png}%
+    \img{figures/qualitative_trajectories_trampoline/PSTNET/frame_0005.png}%
+    \img{figures/qualitative_trajectories_trampoline/PSTNET/frame_0010.png}%
+    \img{figures/qualitative_trajectories_trampoline/PSTNET/frame_0015.png}%
+    \img{figures/qualitative_trajectories_trampoline/PSTNET/frame_0020.png}%
+    \img{figures/qualitative_trajectories_trampoline/PSTNET/frame_0024.png}\\[0.15em]
+
+    % Row 9: Pointcloud
+    \rowlabel{Pointcloud}%
+    \begin{minipage}[c]{0.155\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_trampoline/PC_traj_10/frame_0000.png}\\[2pt]
+        \footnotesize$t{=}0$
+    \end{minipage}%
+    \begin{minipage}[c]{0.155\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_trampoline/PC_traj_10/frame_0005.png}\\[2pt]
+        \footnotesize$t{=}5$
+    \end{minipage}%
+    \begin{minipage}[c]{0.155\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_trampoline/PC_traj_10/frame_0010.png}\\[2pt]
+        \footnotesize$t{=}10$
+    \end{minipage}%
+    \begin{minipage}[c]{0.155\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_trampoline/PC_traj_10/frame_0015.png}\\[2pt]
+        \footnotesize$t{=}15$
+    \end{minipage}%
+    \begin{minipage}[c]{0.155\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_trampoline/PC_traj_10/frame_0020.png}\\[2pt]
+        \footnotesize$t{=}20$
+    \end{minipage}%
+    \begin{minipage}[c]{0.155\textwidth}\centering
+        \pointcloud{figures/qualitative_trajectories_trampoline/PC_traj_10/frame_0024.png}\\[2pt]
+        \footnotesize$t{=}24$
+    \end{minipage}
+
+    \caption{
+Predicted simulation of a \texttt{Trampoline} test task by
+\textcolor{TabBlue}{PEACH} (blue),
+\textcolor{TabGray}{No Context} (gray),
+\textcolor{TabCyan}{MANGO} (cyan),
+\textcolor{TabGreen}{Oracle} (green),
+\textcolor{TabOrange}{No Context (MGN)} (orange),
+\textcolor{TabPurple}{Oracle (MGN)} (purple),
+\textcolor{TabBrown}{GNN Encoder} (brown), and
+\textcolor{TabPink}{PSTNet Encoder} (pink).
+All visualizations show the colored \textbf{predicted mesh} and a \textbf{\textcolor{red}{wireframe}} (red) of the ground-truth simulation. The last row shows an exemplary point cloud sequence from the context set.
+    }
+    \label{fig:qualitative_trajectories_trampoline}
+\end{figure*}

@@ -1,0 +1,12 @@
+epochs: 3000
+accelerator: gpu
+devices: 1
+accumulate_grad_batches: 1
+precision: null
+check_val_every_n_epoch: 1
+fast_dev_run: False
+matmul_precision: high
+num_sanity_val_steps: 1
+checkpointing: True
+enable_progress_bar: False
+gradient_clip_val: 0

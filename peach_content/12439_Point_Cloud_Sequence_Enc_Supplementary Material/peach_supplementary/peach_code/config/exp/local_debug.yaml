@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: pstnet_mlp
+  - override /dataset: db_v1
+
+dataset:
+  train_dataset:
+    dataset_size: 2  # artificially reduce dataset size for debugging
+    max_context_size: 8
+  eval_dataset:
+    dataset_size: 2  # artificially reduce dataset size for debugging
+    context_size: 4
+
+wandb:
+  enabled: False
+
+exp_name: 0101_local_debug
+
+
+
+
+

@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - override /algorithm: oracle_mgn
+  - override /dataset: step_sd_v1
+
+
+wandb:
+  enabled: True
+
+
+exp_name: 5101_sd_oracle_mgn
+
+
+hydra:
+  sweeper:
+    grid_params:
+      seed: 1001, 1002, 1003, 1004

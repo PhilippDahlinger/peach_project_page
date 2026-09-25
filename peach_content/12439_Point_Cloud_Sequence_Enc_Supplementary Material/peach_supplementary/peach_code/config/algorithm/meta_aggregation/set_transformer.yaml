@@ -1,0 +1,5 @@
+name: set_transformer
+latent_dim: 128  # must match encoder output_dim
+num_heads: 4  # number of attention heads
+num_isab_layers: 2  # number of Set Attention Block layers
+dropout: 0.0  # dropout rate
